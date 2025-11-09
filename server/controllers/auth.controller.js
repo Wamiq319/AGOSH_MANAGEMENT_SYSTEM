@@ -1,23 +1,18 @@
-import { registerUser, loginUser } from "../services/index.js";
+import * as authService from "../services/index.js";
 import { sendResponse } from "../utils/index.js";
 
-// REGISTER CONTROLLER
+// ------------------ REGISTER ------------------
 export const register = async (req, res) => {
   const { name, email, password, role, department, rollNo, profile } = req.body;
 
-  if (
-    !name ||
-    !email ||
-    !password ||
-    !role 
-  )
+  if (!name || !email || !password || !role)
     return sendResponse(
       res,
       { success: false, message: "All fields are required" },
       400
     );
 
-  const result = await registerUser({
+  const result = await authService.registerUser({
     name,
     email,
     password,
@@ -59,7 +54,7 @@ export const register = async (req, res) => {
   }
 };
 
-// LOGIN CONTROLLER
+// ------------------ LOGIN ------------------
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -70,7 +65,7 @@ export const login = async (req, res) => {
       400
     );
 
-  const result = await loginUser(email, password);
+  const result = await authService.loginUser(email, password);
 
   switch (result.status) {
     case "SUCCESS":

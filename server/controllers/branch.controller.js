@@ -1,9 +1,9 @@
-import * as userService from "../services/index.js";
+import * as branchService from "../services/index.js";
 import { sendResponse } from "../utils/index.js";
 
-// ------------------ GET ALL USERS ------------------
-export const getAllUsers = async (req, res) => {
-  const result = await userService.getAllUsers();
+// ------------------ GET ALL BRANCHES ------------------
+export const getAllBranches = async (req, res) => {
+  const result = await branchService.getAllBranches();
 
   switch (result.status) {
     case "SUCCESS":
@@ -23,18 +23,17 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-// ------------------ GET USER BY ID ------------------
-export const getUserById = async (req, res) => {
+// ------------------ GET BRANCH BY ID ------------------
+export const getBranchById = async (req, res) => {
   const { id } = req.params;
-  if (!id) {
+  if (!id)
     return sendResponse(
       res,
       { success: false, message: "id is required" },
       400
     );
-  }
 
-  const result = await userService.getUserById(id);
+  const result = await branchService.getBranchById(id);
 
   switch (result.status) {
     case "SUCCESS":
@@ -60,24 +59,78 @@ export const getUserById = async (req, res) => {
   }
 };
 
-// ------------------ DELETE USER BY ID ------------------
-export const deleteUserById = async (req, res) => {
-  const { id } = req.params;
-  if (!id) {
+// ------------------ CREATE BRANCH (optionally with admin) ------------------
+export const createBranch = async (req, res) => {
+  const { branch, admin } = req.body;
+  if (!branch)
     return sendResponse(
       res,
-      { success: false, message: "id is required" },
+      { success: false, message: "branch data is required" },
       400
     );
-  }
 
-  const result = await userService.deleteUserById(id);
+  const result = await branchService.createBranch(branch, admin);
 
   switch (result.status) {
     case "SUCCESS":
       return sendResponse(
         res,
-        { success: true, message: "user deleted successfully" },
+        {
+          success: true,
+          data: result.data,
+          message: "Branch created successfully",
+        },
+        201
+      );
+    case "SERVER_ERROR":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        500
+      );
+    default:
+      return sendResponse(
+        res,
+        { success: false, message: "Unexpected error occurred" },
+        500
+      );
+  }
+};
+
+// ------------------ UPDATE BRANCH BY ID ------------------
+export const updateBranchById = async (req, res) => {
+  const { id } = req.params;
+  const { branch, admin } = req.body;
+
+  if (!id)
+    return sendResponse(
+      res,
+      { success: false, message: "id is required" },
+      400
+    );
+
+  if (!branch && !admin) {
+    return sendResponse(
+      res,
+      {
+        success: false,
+        message: "branch or admin data is required for update",
+      },
+      400
+    );
+  }
+
+  const result = await branchService.updateBranchById(id, { branch, admin });
+
+  switch (result.status) {
+    case "SUCCESS":
+      return sendResponse(
+        res,
+        {
+          success: true,
+          data: result.data,
+          message: "Branch updated successfully",
+        },
         200
       );
     case "NOT_FOUND":
@@ -86,6 +139,12 @@ export const deleteUserById = async (req, res) => {
         { success: false, message: result.message },
         404
       );
+    case "BAD_REQUEST":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        400
+      );
     case "SERVER_ERROR":
       return sendResponse(
         res,
@@ -101,29 +160,23 @@ export const deleteUserById = async (req, res) => {
   }
 };
 
-// ------------------ UPDATE USER BY ID ------------------
-export const updateUserById = async (req, res) => {
+// ------------------ DELETE BRANCH BY ID ------------------
+export const deleteBranchById = async (req, res) => {
   const { id } = req.params;
-  if (!id) {
+  if (!id)
     return sendResponse(
       res,
       { success: false, message: "id is required" },
       400
     );
-  }
-  const updateData = req.body;
 
-  const result = await userService.updateUserById(id, updateData);
+  const result = await branchService.deleteBranchById(id);
 
   switch (result.status) {
     case "SUCCESS":
       return sendResponse(
         res,
-        {
-          success: true,
-          message: "User updated successfully",
-          data: result.data,
-        },
+        { success: true, message: "Branch deleted successfully" },
         200
       );
     case "NOT_FOUND":

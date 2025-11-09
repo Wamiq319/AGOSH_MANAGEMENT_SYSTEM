@@ -2,7 +2,12 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import { userRoutes, authRoutes } from "./routes/index.js";
+import {
+  userRoutes,
+  authRoutes,
+  branchRoutes,
+  studentRoutes,
+} from "./routes/index.js";
 
 // Load environment variables
 dotenv.config();
@@ -87,6 +92,8 @@ app.get("/api", (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/branches", branchRoutes);
+app.use("/api/students", studentRoutes);
 
 // ---------------------
 // Server Start
