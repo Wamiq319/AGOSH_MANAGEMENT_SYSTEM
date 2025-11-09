@@ -10,11 +10,11 @@ const CTA = ({ data = {} }) => {
     description,
     buttonText,
     buttonLink,
-    gradientFrom = "purple-700",
-    gradientTo = "blue-600",
+    gradientFrom = "blue-600",
+    gradientTo = "orange-500",
     textColor = "white",
     buttonVariant = "filled",
-    buttonColor = "gold",
+    buttonColor = "blue",
     rounded = true,
     className = "",
   } = data;
@@ -31,7 +31,7 @@ const CTA = ({ data = {} }) => {
         )}
 
         {description && (
-          <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
             {description}
           </p>
         )}

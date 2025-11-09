@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui";
+import Logo from "../../assets/LOGO.png";
 
 const Navbar = () => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -11,12 +12,9 @@ const Navbar = () => {
         {/* Logo */}
         <div className="flex items-center space-x-2">
           <Link to="/">
-            <h1 className="text-2xl font-bold text-gray-800">
-              AGOSH_CARE_CENTER
-            </h1>
+            <img src={Logo} alt="Scholarship Zone" className="h-20" />
           </Link>
         </div>
-
         {/* Desktop Login Button */}
         <div className="hidden md:block">
           {storedUser ? (

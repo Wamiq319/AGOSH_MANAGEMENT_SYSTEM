@@ -13,7 +13,7 @@ const FormModal = ({
   const [formData, setFormData] = useState(initialData);
   const [validationError, setValidationError] = useState("");
 
-  // initialize default values
+  // Initialize default values
   useEffect(() => {
     const defaultState = {};
     fields.forEach((field) => {
@@ -22,18 +22,18 @@ const FormModal = ({
     setFormData({ ...defaultState, ...initialData });
   }, [fields, initialData]);
 
-  // Normal field change (text, textarea, password, etc.)
+  // Handle normal field change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  //  Dropdown select change
+  // Handle dropdown select change
   const handleDropdownChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  //  Submit handler
+  // Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -48,7 +48,7 @@ const FormModal = ({
     onSubmit(formData);
   };
 
-  //  Field renderer (supports dropdown + all input types including image)
+  // Field renderer (supports dropdown + all input types including image)
   const renderField = (field) => {
     const { type, ...props } = field;
     const value = formData[props.name] || "";
@@ -60,10 +60,10 @@ const FormModal = ({
             {...props}
             selectedValue={value}
             onChange={(val) => handleDropdownChange(props.name, val)}
+            color="blue" // theme color
           />
         );
 
-      // handle image upload using InputField
       case "image":
         return (
           <InputField
@@ -71,6 +71,7 @@ const FormModal = ({
             type="image"
             value={value}
             onChange={handleChange}
+            color="blue" // theme color
           />
         );
 
@@ -81,6 +82,7 @@ const FormModal = ({
             type={type}
             value={value}
             onChange={handleChange}
+            color="blue" // theme color
           />
         );
     }
@@ -97,8 +99,9 @@ const FormModal = ({
       </div>
 
       {validationError && (
-        <p className="text-red-600 text-sm">{validationError}</p>
+        <p className="text-orange-600 text-sm font-medium">{validationError}</p>
       )}
+
       {children && <div>{children}</div>}
     </form>
   );

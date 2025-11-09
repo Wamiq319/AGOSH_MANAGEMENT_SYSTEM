@@ -1,6 +1,7 @@
 import { formatDate } from "@/utils";
 import React from "react";
 import { Button } from ".";
+
 const DataTable = ({
   heading,
   tableHeader,
@@ -11,11 +12,11 @@ const DataTable = ({
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 w-full overflow-x-auto">
       {heading && (
-        <h2 className="text-xl font-bold text-gray-800 mb-4">{heading}</h2>
+        <h2 className="text-xl font-bold text-blue-700 mb-4">{heading}</h2>
       )}
 
       <table className="w-full border-collapse border border-gray-200 text-sm text-left">
-        <thead className="bg-gray-100 text-gray-700 font-semibold">
+        <thead className="bg-blue-50 text-blue-700 font-semibold">
           <tr>
             {tableHeader.map((col, i) => (
               <th
@@ -41,7 +42,7 @@ const DataTable = ({
               return (
                 <tr
                   key={row._id || idx}
-                  className="border-b hover:bg-gray-50 transition-colors"
+                  className="border-b hover:bg-blue-50 transition-colors"
                 >
                   {tableHeader.map((col, i) => {
                     const getValue = (obj, path) =>
@@ -49,35 +50,22 @@ const DataTable = ({
 
                     const value = getValue(row, col.key);
 
-                    // Approved indicator
-                    if (col.key === "status" && value === "approved") {
-                      return (
-                        <td
-                          key={i}
-                          className="px-4 py-3 border border-gray-200 whitespace-nowrap"
-                        >
-                          <span className="px-2 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">
-                            {value.charAt(0).toUpperCase() + value.slice(1)}
-                          </span>
-                        </td>
-                      );
-                    }
-
-                    // Boolean indicator
-                    if (typeof value === "boolean") {
+                    // Status indicator using blue/orange
+                    if (col.key === "status") {
+                      const isActive = value === "active" || value === true;
                       return (
                         <td
                           key={i}
                           className="px-4 py-3 border border-gray-200 whitespace-nowrap"
                         >
                           <span
-                            className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              value
-                                ? "bg-green-100 text-green-700"
-                                : "bg-red-100 text-red-700"
+                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              isActive
+                                ? "bg-blue-100 text-blue-700"
+                                : "bg-orange-100 text-orange-700"
                             }`}
                           >
-                            {value ? "Active" : "Inactive"}
+                            {isActive ? "Active" : "Inactive"}
                           </span>
                         </td>
                       );
@@ -110,7 +98,7 @@ const DataTable = ({
 
                   {(rowButtons.length > 0 || dynamicButtons) && (
                     <td className="px-4 py-3 border border-gray-200 text-center">
-                      <div className="flex justify-center gap-2">
+                      <div className="flex justify-center gap-2 flex-wrap">
                         {rowButtons.map((btn, idx) => (
                           <Button
                             key={idx}

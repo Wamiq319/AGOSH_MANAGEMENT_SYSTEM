@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import * as Icons from "lucide-react";
-import { formatDate } from "@/utils";
 import { Button } from "@/components";
 
-const Card = ({ scholarship, fields, actions }) => {
+const Card = ({ item, fields, actions }) => {
   const [expanded, setExpanded] = useState(false);
 
   const getValue = (obj, path) =>
     path.split(".").reduce((acc, part) => acc?.[part], obj);
 
-  const calculateDaysLeft = (deadline) => {
-    if (!deadline) return 0;
+  const calculateDaysLeft = (date) => {
+    if (!date) return 0;
     return Math.max(
       0,
       Math.ceil(
-        (new Date(deadline).getTime() - new Date().getTime()) /
+        (new Date(date).getTime() - new Date().getTime()) /
           (1000 * 60 * 60 * 24)
       )
     );
@@ -24,28 +23,32 @@ const Card = ({ scholarship, fields, actions }) => {
     <div className="relative w-full h-fit bg-white rounded-2xl p-6 shadow-lg overflow-hidden border border-gray-200 hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1">
       <div className="flex justify-between items-start">
         <h3
-          className="relative w-fit bg-gradient-to-r from-purple-700 to-blue-600 p-4 sm:px-8 pr-6 sm:pr-16 py-3 text-base md:text-lg font-bold text-white shadow-md"
+          className="relative w-fit bg-gradient-to-r from-blue-600 to-orange-500 p-4 sm:px-8 pr-6 sm:pr-16 py-3 text-base md:text-lg font-bold text-white shadow-md"
           style={{ clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)" }}
         >
-          {scholarship.title}
+          {item.title || "Untitled"}
         </h3>
-        <span
-          className={`text-xs font-bold px-3 py-1 rounded-full border ${
-            scholarship.isActive
-              ? "bg-green-100 text-green-700 border-green-300"
-              : "bg-red-100 text-red-700 border-red-300"
-          }`}
-        >
-          {scholarship.isActive ? "Active" : "Closed"}
-        </span>
+
+        {item.status && (
+          <span
+            className={`text-xs font-bold px-3 py-1 rounded-full border ${
+              item.status === "active"
+                ? "bg-blue-100 text-blue-700 border-blue-300"
+                : "bg-orange-100 text-orange-700 border-orange-300"
+            }`}
+          >
+            {item.status === "active" ? "Active" : "Inactive"}
+          </span>
+        )}
       </div>
 
-      <ul className="mt-5 ml-2 space-y-3 text-gray-600 text-sm">
+      <ul className="mt-5 ml-2 space-y-3 text-gray-700 text-sm">
         {fields.map(({ key, label, icon }) => {
           const Icon = Icons[icon];
-          let value = getValue(scholarship, key);
+          let value = getValue(item, key);
 
-          if (key === "deadline" && value) value = formatDate(value);
+          if (key === "deadline" && value)
+            value = new Date(value).toLocaleDateString();
           if (Array.isArray(value)) value = value.join(", ");
           if (value === undefined || value === null) value = "N/A";
 
@@ -59,36 +62,38 @@ const Card = ({ scholarship, fields, actions }) => {
         })}
       </ul>
 
-      <div className="relative ml-2 mt-4">
-        <p
-          className={`text-gray-600 transition-all duration-300 ${
-            expanded ? "line-clamp-none" : "line-clamp-2"
-          }`}
-        >
-          {scholarship.description}
-        </p>
-        {scholarship.description?.length > 120 && (
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="text-blue-600 mt-1 font-semibold hover:underline text-sm"
+      {item.description && (
+        <div className="relative ml-2 mt-4">
+          <p
+            className={`text-gray-700 transition-all duration-300 ${
+              expanded ? "line-clamp-none" : "line-clamp-2"
+            }`}
           >
-            {expanded ? "See Less" : "See More"}
-          </button>
-        )}
-      </div>
+            {item.description}
+          </p>
+          {item.description.length > 120 && (
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="text-blue-600 mt-1 font-semibold hover:underline text-sm"
+            >
+              {expanded ? "See Less" : "See More"}
+            </button>
+          )}
+        </div>
+      )}
 
-      <div className="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between">
+      <div className="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between flex-wrap gap-2">
         {actions.map((action, index) => {
           if (action.type === "text") {
-            let value = getValue(scholarship, action.valueKey);
+            let value = getValue(item, action.valueKey);
             if (action.format === "daysLeft") value = calculateDaysLeft(value);
             return (
               <div key={index} className="flex items-center space-x-2">
-                <span className="text-gray-600 font-medium">
+                <span className="text-gray-700 font-medium">
                   {action.label}:
                 </span>
-                <span className="text-red-500 font-bold text-lg">
-                  {value} Days
+                <span className="text-orange-600 font-bold text-lg">
+                  {value}
                 </span>
               </div>
             );
@@ -98,10 +103,9 @@ const Card = ({ scholarship, fields, actions }) => {
             return (
               <Button
                 key={index}
-                onClick={() => action.onClick(scholarship)}
+                onClick={() => action.onClick(item)}
                 variant="filled"
                 color="blue"
-                size="md"
                 className="flex items-center space-x-2 shadow-md hover:shadow-lg"
               >
                 <span>{action.label}</span>
