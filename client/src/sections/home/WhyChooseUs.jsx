@@ -1,41 +1,42 @@
 import React from "react";
-import { FaCheckCircle, FaDatabase, FaUserGraduate } from "react-icons/fa";
+import { FaHandHoldingHeart, FaUserCheck, FaBullseye } from "react-icons/fa";
 
 const WhyChooseUs = () => {
   const features = [
     {
-      title: "Easy to Use",
+      title: "Transparent Donations",
       description:
-        "Our platform is designed to be intuitive and simple to navigate.",
-      icon: <FaCheckCircle className="text-5xl text-blue-500" />,
+        "Our platform ensures that your donations go directly to the students you choose to support.",
+      icon: <FaHandHoldingHeart className="text-5xl text-orange-500" />,
     },
     {
-      title: "Comprehensive Database",
+      title: "Verified Students",
       description:
-        "Access a vast database of scholarships from various sources.",
-      icon: <FaDatabase className="text-5xl text-purple-500" />,
+        "We verify every student's eligibility to ensure that your contributions make a real difference.",
+      icon: <FaUserCheck className="text-5xl text-orange-500" />,
     },
     {
-      title: "Personalized Matches",
+      title: "Direct Impact",
       description:
-        "Our smart algorithm delivers tailored scholarship recommendations.",
-      icon: <FaUserGraduate className="text-5xl text-yellow-500" />,
+        "See the direct impact of your generosity and follow the progress of the students you sponsor.",
+      icon: <FaBullseye className="text-5xl text-orange-500" />,
     },
   ];
 
   return (
-    <section className="bg-gray-50 py-20">
+    <section className="bg-orange-50 py-20">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-extrabold text-gray-800">
-            Why{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-700">
-              Choose Us?
+            Why Choose
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">
+              {" "}
+              Agosh?
             </span>
           </h2>
           <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-            We provide the best tools and resources to help you succeed in your
-            scholarship search.
+            We are committed to creating a trustworthy and effective platform
+            for connecting donors and students.
           </p>
         </div>
 
@@ -43,7 +44,7 @@ const WhyChooseUs = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-transform duration-300"
+              className="bg-white p-8 rounded-xl border border-orange-100 border-t-4 border-t-orange-500"
             >
               <div className="flex justify-center mb-6">{feature.icon}</div>
               <h3 className="text-2xl font-bold text-gray-800 mb-3 text-center">

@@ -4,36 +4,36 @@ import { FaRegCalendarAlt, FaNewspaper } from "react-icons/fa";
 const LatestNews = () => {
   const news = [
     {
-      title: "New Scholarship for STEM Students",
-      date: "September 24, 2025",
+      title: "First Batch of Students Funded",
+      date: "October 28, 2025",
       excerpt:
-        "A brand-new scholarship program has been announced for students pursuing STEM fields. Applications are now open.",
+        "We are thrilled to announce that our first group of students has been fully funded for the upcoming academic year.",
     },
     {
-      title: "Application Deadlines Approaching",
-      date: "September 20, 2025",
+      title: "New Donor Partnerships",
+      date: "October 15, 2025",
       excerpt:
-        "Several scholarships are nearing their deadlines this month. Don’t miss your chance to apply before it’s too late.",
+        "Agosh Care Center is proud to partner with three new corporate donors to expand our reach and support more students.",
     },
     {
-      title: "Tips for a Winning Scholarship Essay",
-      date: "September 15, 2025",
+      title: "Success Story: A Student's Journey",
+      date: "October 02, 2025",
       excerpt:
-        "Learn how to write a compelling scholarship essay that highlights your strengths and sets you apart from others.",
+        "Read about how a scholarship from one of our donors transformed a young student's life and educational opportunities.",
     },
   ];
 
   return (
-    <section className="bg-gray-50 py-16">
+    <section className="bg-orange-50 py-16">
       <div className="container mx-auto px-6">
         {/* Section Heading */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-blue-700">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800">
             Latest News
           </h2>
           <p className="mt-3 text-gray-600 max-w-xl mx-auto">
-            Stay updated with the newest opportunities, tips, and important
-            scholarship announcements.
+            Stay updated with the latest news, events, and success stories from
+            the Agosh Care Center community.
           </p>
         </div>
 
@@ -42,10 +42,10 @@ const LatestNews = () => {
           {news.map((item, index) => (
             <div
               key={index}
-              className="bg-white p-8 rounded-xl shadow hover:shadow-lg transition border-t-4 border-yellow-400 flex flex-col"
+              className="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col"
             >
               <div className="flex items-center justify-between mb-4">
-                <FaNewspaper className="text-blue-600 text-2xl" />
+                <FaNewspaper className="text-orange-600 text-2xl" />
                 <div className="flex items-center text-gray-500 text-sm">
                   <FaRegCalendarAlt className="mr-2" />
                   {item.date}
@@ -57,7 +57,7 @@ const LatestNews = () => {
               <p className="text-gray-600 mb-4 flex-grow">{item.excerpt}</p>
               <a
                 href="#"
-                className="text-blue-600 font-medium hover:underline mt-auto"
+                className="text-orange-600 font-medium hover:underline mt-auto"
               >
                 Read More →
               </a>

@@ -2,18 +2,23 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import cron from "node-cron";
-import { userRoutes, authRoutes } from "./src/routes/index.js";
-import { deactivateExpiredScholarships } from "./src/utils/index.js";
+import { userRoutes, authRoutes } from "./routes/index.js";
 
+// Load environment variables
 dotenv.config();
+
 const app = express();
 
+// ---------------------
 // CORS Configuration
+// ---------------------
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",") // allows multiple origins separated by comma
+  : [];
+
 const corsOptions = {
   origin: (origin, callback) => {
     console.log("Request Origin:", origin);
-    const allowedOrigins = process.env.ALLOWED_ORIGINS;
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -26,10 +31,15 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+// ---------------------
+// Body Parser
+// ---------------------
 app.use(express.json({ limit: "30mb" }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 
+// ---------------------
 // Request Logger
+// ---------------------
 app.use((req, res, next) => {
   const { method, originalUrl, body } = req;
   console.log(`\n--- Incoming Request ---`);
@@ -49,21 +59,37 @@ app.use((req, res, next) => {
   next();
 });
 
+// ---------------------
 // MongoDB Connection
+// ---------------------
+const mongoUri = process.env.MONGO_URI;
+const dbName = process.env.DB_NAME;
+
+if (!mongoUri || !dbName) {
+  console.error("❌ Missing MONGO_URI or DB_NAME in .env file!");
+  process.exit(1);
+}
+
+console.log("🔍 Connecting to MongoDB URI:", mongoUri);
+console.log("🔍 Database Name:", dbName);
+
 mongoose
-  .connect(process.env.MONGO_URI, { dbName: "scholarship_zone" })
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("MongoDB Connection Error:", err));
+  .connect(mongoUri, { dbName })
+  .then(() => console.log(`✅ MongoDB Connected to database: ${dbName}`))
+  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
-cron.schedule("0 0 * * *", deactivateExpiredScholarships);
-
+// ---------------------
 // Routes
+// ---------------------
 app.get("/api", (req, res) => {
   res.status(200).json({ message: "Server is running" });
 });
+
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 
+// ---------------------
 // Server Start
+// ---------------------
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

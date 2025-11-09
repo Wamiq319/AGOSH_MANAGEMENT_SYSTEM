@@ -8,28 +8,28 @@ import { Pagination, Autoplay } from "swiper/modules";
 const Testimonials = () => {
   const testimonials = [
     {
-      name: "John Doe",
-      field: "Computer Science",
+      name: "Alex Johnson",
+      role: "Donor",
       quote:
-        "Scholarship Zone helped me find the perfect scholarship to fund my studies. I am very grateful!",
+        "Agosh Care Center has made it so easy to give back. I'm proud to support the next generation of leaders.",
     },
     {
-      name: "Jane Smith",
-      field: "Engineering",
+      name: "Maria Garcia",
+      role: "Student",
       quote:
-        "The application process was so easy and straightforward. I highly recommend this platform.",
+        "Thanks to a generous donor on this platform, I can now afford my tuition. I am forever grateful.",
     },
     {
-      name: "Sam Wilson",
-      field: "Medical Sciences",
+      name: "David Chen",
+      role: "Donor",
       quote:
-        "I found a scholarship that I never would have known about otherwise. Thank you, Scholarship Zone!",
+        "I've always wanted to support education, and Agosh provides a transparent and impactful way to do it.",
     },
     {
-      name: "Emily White",
-      field: "Business Administration",
+      name: "Sarah Lee",
+      role: "Student",
       quote:
-        "The personalized matches were incredibly accurate. It saved me so much time!",
+        "The application process was simple, and I was matched with a donor who believed in my dreams.",
     },
   ];
 
@@ -38,14 +38,14 @@ const Testimonials = () => {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-extrabold text-gray-800">
-            What Our{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-700">
-              Users Say
+            Stories of{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">
+              Impact
             </span>
           </h2>
           <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-            Hear from students who have successfully used our platform to achieve
-            their dreams.
+            Hear from the donors and students who have been a part of our
+            community.
           </p>
         </div>
 
@@ -67,16 +67,16 @@ const Testimonials = () => {
         >
           {testimonials.map((testimonial, index) => (
             <SwiperSlide key={index}>
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-8 rounded-xl shadow-lg h-full flex flex-col">
-                <FaQuoteLeft className="text-blue-200 text-4xl mb-4" />
-                <p className="text-gray-700 italic mb-6 leading-relaxed flex-grow">
+              <div className="bg-gradient-to-br from-orange-400 to-orange-600 p-8 rounded-xl shadow-lg h-full flex flex-col text-white">
+                <FaQuoteLeft className="text-orange-200 text-4xl mb-4" />
+                <p className="italic mb-6 leading-relaxed flex-grow">
                   "{testimonial.quote}"
                 </p>
                 <div className="text-right">
-                  <p className="text-lg font-bold text-blue-800">
-                    {testimonial.name}
+                  <p className="text-lg font-bold">{testimonial.name}</p>
+                  <p className="text-sm text-orange-100">
+                    {testimonial.role}
                   </p>
-                  <p className="text-sm text-blue-600">{testimonial.field}</p>
                 </div>
               </div>
             </SwiperSlide>

@@ -1,18 +1,24 @@
 import React from "react";
 import { Navbar, Footer } from "../../components";
-import { Hero, Process, WhyChooseUs, Testimonials } from "@/sections";
+import {
+  Hero,
+  Process,
+  WhyChooseUs,
+  Testimonials,
+  LatestNews,
+} from "@/sections";
 import { CTA } from "@/components";
 
 const ctaData = {
-  title: "Ready to Find Your Scholarship?",
+  title: "Ready to Make a Difference?",
   description:
-    "Join thousands of students who have successfully funded their education through our platform. Your future is just a click away.",
-  buttonText: "Start Exploring Now",
-  buttonLink: "/scholarships",
-  gradientFrom: "purple-700",
-  gradientTo: "blue-600",
+    "Join our community of donors and students and help us build a brighter future, one student at a time.",
+  buttonText: "Get Started Today",
+  buttonLink: "/register",
+  gradientFrom: "orange-600",
+  gradientTo: "orange-400",
   buttonVariant: "filled",
-  buttonColor: "gold",
+  buttonColor: "orange",
   rounded: true,
 };
 
@@ -24,6 +30,7 @@ const LandingPage = () => {
       <Process />
       <WhyChooseUs />
       <Testimonials />
+      <LatestNews />
       <CTA data={ctaData} />
       <Footer />
     </div>
