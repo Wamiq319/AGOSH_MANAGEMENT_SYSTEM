@@ -20,11 +20,11 @@ const Navbar = () => {
           {storedUser ? (
             <Link
               to={`/${
-                storedUser.role === "ADMIN"
-                  ? "admin"
-                  : storedUser.role === "COMMITTEE"
-                  ? "committee"
-                  : "student"
+                storedUser.role === "HEAD_OFFICE_ADMIN"
+                  ? "admin_dashboard"
+                  : storedUser.role === "BRANCH_ADMIN"
+                  ? "branch_admin_dashboard"
+                  : "donor"
               }`}
             >
               <Button color="orange" variant="filled" rounded>
@@ -45,11 +45,11 @@ const Navbar = () => {
           {storedUser ? (
             <Link
               to={`/${
-                storedUser.role === "ADMIN"
-                  ? "admin"
-                  : storedUser.role === "COMMITTEE"
-                  ? "committee"
-                  : "student"
+                storedUser.role === "HEAD_OFFICE_ADMIN"
+                  ? "admin_dashboard"
+                  : storedUser.role === "BRANCH_ADMIN"
+                  ? "branch_admin_dashboard"
+                  : "donor"
               }`}
             >
               <Button color="orange" variant="filled" rounded>

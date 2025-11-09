@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/", branchController.getAllBranches);
 router.get("/:id", branchController.getBranchById);
-router.post("/create", branchController.createBranch);
+router.post("/", branchController.createBranch);
 router.put("/:id", branchController.updateBranchById);
 router.delete("/:id", branchController.deleteBranchById);
 
