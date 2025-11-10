@@ -1,1 +1,1 @@
-export { SidebarMenus, adminSidebar, branchAdminSidebar } from "./SidebarData";
+export { SidebarMenus } from "./SidebarData";

@@ -1,111 +1,58 @@
 import {
-  Users,
-  FileText,
-  ClipboardList,
-  FileCheck,
   LayoutDashboard,
-  UserMinus,
+  FileText,
+  Users,
+  DollarSign,
   Building,
 } from "lucide-react";
-
-export const adminSidebar = [
-  {
-    title: "Dashboard",
-    icon: LayoutDashboard,
-    path: "/admin",
-  },
-  {
-    title: "Branches",
-    icon: Building,
-    path: "branches",
-  },
-];
-
-export const branchAdminSidebar = [
-  {
-    title: "Dashboard",
-    icon: LayoutDashboard,
-    path: "/branch-admin",
-  },
-  {
-    title: "Students",
-    icon: Users,
-    path: "students",
-  },
-];
 
 export const SidebarMenus = {
   HEAD_OFFICE_ADMIN: [
     {
-      label: "Admin Dashboard",
+      label: "Dashboard",
       Icon: LayoutDashboard,
-      path: "/admin_dashboard",
+      path: "/admin",
     },
     {
       label: "Branch Management",
+      Icon: Building,
+      path: "/admin/branches",
+    },
+    {
+      label: "Reports",
       Icon: FileText,
-      path: "/branch_management",
-    },
-    {
-      label: "Student Management",
-      Icon: Users, // Students
-      path: "/admin/students",
-    },
-    {
-      label: "Committee Management",
-      Icon: UserMinus,
-      path: "/admin/committee",
-    },
-    {
-      label: "Application Management",
-      Icon: FileText, // Applications
-      path: "/admin/applicationmanagement",
+      path: "/admin/reports", // optional for future
     },
   ],
-  STUDENT: [
+
+  BRANCH_ADMIN: [
     {
-      label: "Student Dashboard",
+      label: "Branch Dashboard",
       Icon: LayoutDashboard,
-      path: "/student",
+      path: "/branch-admin",
     },
     {
-      label: "Available Scholarships",
-      Icon: FileText,
-      path: "/student/scholarships",
-    },
-    {
-      label: "My Applications",
-      Icon: ClipboardList,
-      path: "/student/applications",
-    },
-    {
-      label: "Profile",
+      label: "Students",
       Icon: Users,
-      path: "/student/profile",
+      path: "/branch-admin/students", // you can add later when students page exists
+    },
+    {
+      label: "Donations",
+      Icon: DollarSign,
+      path: "/branch-admin/donations", // optional future route
     },
   ],
-  COMMITTEE: [
-    {
-      label: "Committee Dashboard",
-      Icon: LayoutDashboard,
-      path: "/committee/",
-    },
-    {
-      label: "Assigned Applications",
-      Icon: ClipboardList,
-      path: "/committee/assigned",
-    },
-    {
-      label: "Evaluated Applications",
-      Icon: FileCheck,
-      path: "/committee/evaluated",
-    },
-  ],
+
   DONOR: [
     {
       label: "Donor Dashboard",
       Icon: LayoutDashboard,
       path: "/donor",
+    },
+    {
+      label: "My Donations",
+      Icon: DollarSign,
+      path: "/donor/donations", // optional future route
     },
   ],
 };
