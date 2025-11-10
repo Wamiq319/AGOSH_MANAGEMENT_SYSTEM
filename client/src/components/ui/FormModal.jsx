@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { InputField, Dropdown } from "@/components/input";
+import { Button } from "@/components/ui"; // Import Button
 
 const defaultInitialData = {};
 
@@ -9,6 +10,8 @@ const FormModal = ({
   onSubmit,
   formId,
   children,
+  submitText, // Add submitText prop
+  isSubmitting, // Add isSubmitting prop
 }) => {
   const [formData, setFormData] = useState(initialData);
   const [validationError, setValidationError] = useState("");
@@ -103,6 +106,20 @@ const FormModal = ({
       )}
 
       {children && <div>{children}</div>}
+
+      {/* Default Submit Button */}
+      {submitText && (
+        <div className="flex justify-end mt-6">
+          <Button
+            type="submit"
+            variant="filled"
+            color="blue"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Submitting..." : submitText}
+          </Button>
+        </div>
+      )}
     </form>
   );
 };

@@ -8,16 +8,16 @@ import {
 } from "lucide-react";
 
 export const SidebarMenus = {
-  ADMIN: [
+  HEAD_OFFICE_ADMIN: [
     {
       label: "Admin Dashboard",
       Icon: LayoutDashboard,
-      path: "/admin/",
+      path: "/admin_dashboard",
     },
     {
-      label: "Scholarship Management",
-      Icon: FileText, 
-      path: "/admin/scholarships",
+      label: "Branch Management",
+      Icon: FileText,
+      path: "/branch_management",
     },
     {
       label: "Student Management",

@@ -6,3 +6,4 @@ export { default as FormModal } from "./FormModal";
 export { default as Card } from "./Card";
 export { default as Pagination } from "./Pagination";
 export { default as CTA } from "./Cta";
+export { default as Toast } from "./Toast";

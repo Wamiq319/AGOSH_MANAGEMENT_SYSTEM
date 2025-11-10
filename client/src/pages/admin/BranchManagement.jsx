@@ -1,14 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchResources, deleteResource } from "@/redux/slices/resourcesSLice";
+import {
+  fetchResources,
+  deleteResource,
+  createResource,
+  updateResource,
+} from "@/redux/slices/resourcesSLice";
 import {
   DataTable,
   ConfirmationModal,
   Modal,
   Button,
   FormModal,
+  Toast,
 } from "@/components";
-import { FaTrash, FaEdit, FaEye, FaPlus } from "react-icons/fa";
+import {
+  FaTrash,
+  FaEdit,
+  FaEye,
+  FaPlus,
+  FaBuilding,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaUserTie,
+  FaEnvelope,
+  FaShieldAlt,
+  FaCalendarAlt,
+} from "react-icons/fa";
 
 export const BranchesManagementPage = () => {
   const dispatch = useDispatch();
@@ -18,13 +36,13 @@ export const BranchesManagementPage = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formMode, setFormMode] = useState("add");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toast, setToast] = useState(null);
 
-  // Fetch branches
   useEffect(() => {
     dispatch(fetchResources({ resource: "branches" }));
   }, [dispatch]);
 
-  // Handle Delete
   const handleDelete = (row) => {
     setDeleteId(row._id);
     setIsConfirmOpen(true);
@@ -32,13 +50,23 @@ export const BranchesManagementPage = () => {
 
   const confirmDelete = async () => {
     if (deleteId) {
-      await dispatch(deleteResource({ resource: "branches", id: deleteId }));
+      const result = await dispatch(
+        deleteResource({ resource: "branches", id: deleteId })
+      );
+      if (result.meta.requestStatus === "fulfilled") {
+        setToast({ message: "Branch deleted successfully.", type: "success" });
+        dispatch(fetchResources({ resource: "branches" }));
+      } else {
+        setToast({
+          message: result.payload || "Failed to delete branch.",
+          type: "error",
+        });
+      }
       setDeleteId(null);
       setIsConfirmOpen(false);
     }
   };
 
-  // Handle Edit/View
   const handleView = (row) => {
     setSelectedBranch(row);
   };
@@ -49,17 +77,83 @@ export const BranchesManagementPage = () => {
     setIsFormOpen(true);
   };
 
-  // Add New Branch
   const handleAddNew = () => {
     setFormMode("add");
     setSelectedBranch(null);
     setIsFormOpen(true);
   };
 
+  const handleFormSubmit = async (formData) => {
+    setIsSubmitting(true);
+    try {
+      let result;
+      const {
+        name,
+        location,
+        phoneNumber,
+        adminName,
+        adminEmail,
+        adminPassword,
+      } = formData;
+
+      if (formMode === "add") {
+        result = await dispatch(
+          createResource({
+            resource: "branches",
+            body: {
+              branch: { name, location, phoneNumber },
+              admin: {
+                name: adminName,
+                email: adminEmail,
+                password: adminPassword,
+              },
+            },
+          })
+        );
+      } else {
+        const admin = { name: adminName, email: adminEmail };
+        if (adminPassword) {
+          admin.password = adminPassword;
+        }
+        result = await dispatch(
+          updateResource({
+            resource: "branches",
+            id: selectedBranch._id,
+            body: {
+              branch: { name, location, phoneNumber },
+              admin,
+            },
+          })
+        );
+      }
+
+      if (result.meta.requestStatus === "fulfilled") {
+        setToast({
+          message: `Branch ${
+            formMode === "add" ? "created" : "updated"
+          } successfully.`,
+          type: "success",
+        });
+        dispatch(fetchResources({ resource: "branches" }));
+        setIsFormOpen(false);
+      } else {
+        setToast({
+          message: result.payload || "An error occurred.",
+          type: "error",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+      setToast({ message: "An unexpected error occurred.", type: "error" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const tableHeader = [
     { label: "Branch Name", key: "name" },
     { label: "Location", key: "location" },
-    { label: "Phone", key: "phone" },
+    { label: "Admin", key: "admin.name" },
     { label: "Created On", key: "createdAt" },
   ];
 
@@ -84,8 +178,65 @@ export const BranchesManagementPage = () => {
     },
   ];
 
+  const getFormFields = () => {
+    const fields = [
+      { label: "Branch Name", name: "name", type: "text", required: true },
+      { label: "Location", name: "location", type: "text", required: true },
+      {
+        label: "Phone Number",
+        name: "phoneNumber",
+        type: "text",
+        required: true,
+      },
+      { label: "Admin Name", name: "adminName", type: "text", required: true },
+      {
+        label: "Admin Email",
+        name: "adminEmail",
+        type: "email",
+        required: true,
+      },
+    ];
+    if (formMode === "add") {
+      fields.push({
+        label: "Admin Password",
+        name: "adminPassword",
+        type: "password",
+        required: true,
+      });
+    } else {
+      fields.push({
+        label: "New Password",
+        name: "adminPassword",
+        type: "password",
+        placeholder: "Leave blank to keep current password",
+        required: false,
+      });
+    }
+    return fields;
+  };
+
+  const getInitialData = () => {
+    if (formMode === "edit" && selectedBranch) {
+      return {
+        name: selectedBranch.name,
+        location: selectedBranch.location,
+        phoneNumber: selectedBranch.phoneNumber,
+        adminName: selectedBranch.admin?.name,
+        adminEmail: selectedBranch.admin?.email,
+      };
+    }
+    return {};
+  };
+
   return (
     <div className="p-6">
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-blue-700">
           Branches Management
@@ -100,7 +251,6 @@ export const BranchesManagementPage = () => {
         </Button>
       </div>
 
-      {/* Table or Loading */}
       {status === "loading" && !data.branches?.length ? (
         <div className="flex justify-center py-10">
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -124,7 +274,7 @@ export const BranchesManagementPage = () => {
         </div>
       )}
 
-      {/* ---------- View Modal ---------- */}
+      {/* View Modal */}
       <Modal
         isOpen={!!selectedBranch && !isFormOpen}
         onClose={() => setSelectedBranch(null)}
@@ -132,27 +282,84 @@ export const BranchesManagementPage = () => {
         size="md"
       >
         {selectedBranch ? (
-          <div className="space-y-3 text-gray-700">
-            <p>
-              <strong>Branch Name:</strong> {selectedBranch.name}
-            </p>
-            <p>
-              <strong>Location:</strong> {selectedBranch.location}
-            </p>
-            <p>
-              <strong>Phone:</strong> {selectedBranch.phone}
-            </p>
-            <p>
-              <strong>Created At:</strong>{" "}
-              {new Date(selectedBranch.createdAt).toLocaleString()}
-            </p>
+          <div className="space-y-6">
+            {/* Branch Details Section */}
+            <div>
+              <h3 className="text-lg font-semibold text-blue-700 border-b pb-2 mb-3 flex items-center">
+                <FaBuilding className="mr-2" /> Branch Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div className="flex items-center">
+                  <FaBuilding className="text-gray-500 mr-3" />
+                  <strong className="mr-2">Name:</strong> {selectedBranch.name}
+                </div>
+                <div className="flex items-center">
+                  <FaMapMarkerAlt className="text-gray-500 mr-3" />
+                  <strong className="mr-2">Location:</strong>{" "}
+                  {selectedBranch.location}
+                </div>
+                <div className="flex items-center col-span-2">
+                  <FaPhone className="text-gray-500 mr-3" />
+                  <strong className="mr-2">Phone:</strong>{" "}
+                  {selectedBranch.phoneNumber}
+                </div>
+              </div>
+            </div>
+
+            {/* Admin Details Section */}
+            {selectedBranch.admin && (
+              <div>
+                <h3 className="text-lg font-semibold text-blue-700 border-b pb-2 mb-3 flex items-center">
+                  <FaUserTie className="mr-2" /> Admin Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="flex items-center">
+                    <FaUserTie className="text-gray-500 mr-3" />
+                    <strong className="mr-2">Name:</strong>{" "}
+                    {selectedBranch.admin.name}
+                  </div>
+                  <div className="flex items-center">
+                    <FaEnvelope className="text-gray-500 mr-3" />
+                    <strong className="mr-2">Email:</strong>{" "}
+                    {selectedBranch.admin.email}
+                  </div>
+                  <div className="flex items-center">
+                    <FaShieldAlt className="text-gray-500 mr-3" />
+                    <strong className="mr-2">Password:</strong>{" "}
+                    {selectedBranch.admin.password}
+                  </div>
+                  <div className="flex items-center">
+                    <FaShieldAlt className="text-gray-500 mr-3" />
+                    <strong className="mr-2">Role:</strong>{" "}
+                    {selectedBranch.admin.role}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Timestamps */}
+            <div>
+              <h3 className="text-lg font-semibold text-blue-700 border-b pb-2 mb-3 flex items-center">
+                <FaCalendarAlt className="mr-2" /> System Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <p>
+                  <strong className="mr-2">Created:</strong>{" "}
+                  {new Date(selectedBranch.createdAt).toLocaleString()}
+                </p>
+                <p>
+                  <strong className="mr-2">Last Updated:</strong>{" "}
+                  {new Date(selectedBranch.updatedAt).toLocaleString()}
+                </p>
+              </div>
+            </div>
           </div>
         ) : (
           <p className="text-gray-400">Loading branch details...</p>
         )}
       </Modal>
 
-      {/* ---------- Form Modal (Add/Edit) ---------- */}
+      {/* Form Modal (Add/Edit) */}
       <Modal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
@@ -160,30 +367,15 @@ export const BranchesManagementPage = () => {
         size="md"
       >
         <FormModal
-          initialData={formMode === "edit" ? selectedBranch : {}}
-          fields={[
-            {
-              label: "Branch Name",
-              name: "name",
-              type: "text",
-              required: true,
-            },
-            {
-              label: "Location",
-              name: "location",
-              type: "text",
-              required: true,
-            },
-            { label: "Phone", name: "phone", type: "text", required: true },
-          ]}
-          onSubmit={(formData) => {
-            console.log("Form Data:", formData);
-            setIsFormOpen(false);
-          }}
+          isSubmitting={isSubmitting}
+          submitText={formMode === "add" ? "Create Branch" : "Save Changes"}
+          initialData={getInitialData()}
+          fields={getFormFields()}
+          onSubmit={handleFormSubmit}
         />
       </Modal>
 
-      {/* ---------- Delete Confirmation ---------- */}
+      {/* Delete Confirmation */}
       <ConfirmationModal
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}

@@ -96,7 +96,8 @@ export const updateBranchById = async (branchId, updateData) => {
 
     const updatedBranchWithAdmin = await Branch.findById(branchId).populate(
       "admin",
-      "name email role"
+      // WARNING: Including password is a security risk. Do not use in production.
+      "name email role password"
     );
 
     return { status: "SUCCESS", data: updatedBranchWithAdmin };
@@ -143,7 +144,10 @@ export const deleteBranchById = async (branchId) => {
 // ------------------ GET ALL BRANCHES ------------------
 export const getAllBranches = async () => {
   try {
-    const branches = await Branch.find().populate("admin", "name email role");
+    const branches = await Branch.find().populate(
+      "admin",
+      "name email role password"
+    );
     return { status: "SUCCESS", data: branches };
   } catch (error) {
     return { status: "SERVER_ERROR", message: error.message };
@@ -155,7 +159,8 @@ export const getBranchById = async (branchId) => {
   try {
     const branch = await Branch.findById(branchId).populate(
       "admin",
-      "name email role"
+      // WARNING: Including password is a security risk. Do not use in production.
+      "name email role password"
     );
     if (!branch) return { status: "NOT_FOUND", message: "Branch not found" };
 
