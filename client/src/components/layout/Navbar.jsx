@@ -21,9 +21,9 @@ const Navbar = () => {
             <Link
               to={`/${
                 storedUser.role === "HEAD_OFFICE_ADMIN"
-                  ? "admin_dashboard"
+                  ? "admin"
                   : storedUser.role === "BRANCH_ADMIN"
-                  ? "branch_admin_dashboard"
+                  ? "branch-admin"
                   : "donor"
               }`}
             >
@@ -46,9 +46,9 @@ const Navbar = () => {
             <Link
               to={`/${
                 storedUser.role === "HEAD_OFFICE_ADMIN"
-                  ? "admin_dashboard"
+                  ? "admin"
                   : storedUser.role === "BRANCH_ADMIN"
-                  ? "branch_admin_dashboard"
+                  ? "branch-admin"
                   : "donor"
               }`}
             >

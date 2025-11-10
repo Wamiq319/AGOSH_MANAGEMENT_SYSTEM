@@ -4,22 +4,36 @@ import {
   LandingPage,
   LoginPage,
   AdminDashboard,
-  AdminLayout,
+  HeadAdminLayout,
   BranchesManagementPage,
+  BranchAdminDashboard,
+  BranchAdminLayout,
+  DonorDashboard,
+  DonorAdminLayout,
 } from "@/pages";
 
 const AppRouter = () => {
   return (
     <Router>
       <Routes>
+        {/* Website Routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route element={<AdminLayout />}>
-          <Route path="/admin_dashboard" element={<AdminDashboard />} />
-          <Route
-            path="/branch_management"
-            element={<BranchesManagementPage />}
-          />
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={<HeadAdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="branches" element={<BranchesManagementPage />} />
+        </Route>
+
+        {/* Branch Admin Routes */}
+        <Route path="/branch-admin" element={<BranchAdminLayout />}>
+          <Route index element={<BranchAdminDashboard />} />
+        </Route>
+
+        {/* Donor Routes */}
+        <Route path="/donor" element={<DonorAdminLayout />}>
+          <Route index element={<DonorDashboard />} />
         </Route>
       </Routes>
     </Router>

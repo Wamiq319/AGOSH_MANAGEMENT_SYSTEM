@@ -20,8 +20,8 @@ const LoginPage = () => {
     if (login.fulfilled.match(result)) {
       const role = result.payload.data.role;
       if (role === "ADMIN") navigate("/admin");
-      else if (role === "STUDENT") navigate("/student");
-      else if (role === "COMMITTEE") navigate("/committee");
+      else if (role === "BRANCH_ADMIN") navigate("/branch-admin");
+      else if (role === "DONOR") navigate("/donor");
       else navigate("/login");
     }
   };

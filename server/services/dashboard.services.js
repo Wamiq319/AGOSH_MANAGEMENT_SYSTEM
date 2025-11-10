@@ -5,7 +5,7 @@ import User from "../models/User.js";
 import mongoose from "mongoose";
 
 // ------------------ FOR HEAD_OFFICE_ADMIN ------------------
-const getAdminDashboardData = async () => {
+export const getAdminDashboardData = async () => {
   const [
     totalStudents,
     totalDonations,
@@ -45,7 +45,7 @@ const getAdminDashboardData = async () => {
 };
 
 // ------------------ FOR BRANCH_ADMIN ------------------
-const getBranchAdminDashboardData = async (branchId) => {
+export const getBranchAdminDashboardData = async (branchId) => {
   const [
     totalStudents,
     totalDonations,
@@ -78,6 +78,28 @@ const getBranchAdminDashboardData = async (branchId) => {
   };
 };
 
+// ------------------ FOR DONOR ------------------
+export const getDonorDashboardData = async (donorId) => {
+  const [totalDonations, recentDonations] = await Promise.all([
+    Donation.aggregate([
+      { $match: { donor: new mongoose.Types.ObjectId(donorId) } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]),
+    Donation.find({ donor: donorId })
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .populate("branch", "name"),
+  ]);
+
+  return {
+    status: "SUCCESS",
+    data: {
+      totalDonations: totalDonations[0]?.total || 0,
+      recentDonations,
+    },
+  };
+};
+
 // ------------------ MAIN DASHBOARD SERVICE ------------------
 export const getDashboardData = async (user) => {
   try {
@@ -92,6 +114,8 @@ export const getDashboardData = async (user) => {
           };
         }
         return await getBranchAdminDashboardData(user.branch);
+      case "DONOR":
+        return await getDonorDashboardData(user._id);
       default:
         return {
           status: "FORBIDDEN",

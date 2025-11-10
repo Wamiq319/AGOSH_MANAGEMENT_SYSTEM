@@ -5,7 +5,34 @@ import {
   FileCheck,
   LayoutDashboard,
   UserMinus,
+  Building,
 } from "lucide-react";
+
+export const adminSidebar = [
+  {
+    title: "Dashboard",
+    icon: LayoutDashboard,
+    path: "/admin",
+  },
+  {
+    title: "Branches",
+    icon: Building,
+    path: "branches",
+  },
+];
+
+export const branchAdminSidebar = [
+  {
+    title: "Dashboard",
+    icon: LayoutDashboard,
+    path: "/branch-admin",
+  },
+  {
+    title: "Students",
+    icon: Users,
+    path: "students",
+  },
+];
 
 export const SidebarMenus = {
   HEAD_OFFICE_ADMIN: [
@@ -72,6 +99,13 @@ export const SidebarMenus = {
       label: "Evaluated Applications",
       Icon: FileCheck,
       path: "/committee/evaluated",
+    },
+  ],
+  DONOR: [
+    {
+      label: "Donor Dashboard",
+      Icon: LayoutDashboard,
+      path: "/donor",
     },
   ],
 };
