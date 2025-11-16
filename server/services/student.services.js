@@ -6,6 +6,7 @@ export const createStudent = async (studentData) => {
     const newStudent = await Student.create(studentData);
     return { status: "SUCCESS", data: newStudent };
   } catch (error) {
+    console.error("❌ Service Crash | createStudent:", error);
     return { status: "SERVER_ERROR", message: error.message };
   }
 };
@@ -16,6 +17,7 @@ export const getAllStudents = async () => {
     const students = await Student.find().populate("branch", "name location");
     return { status: "SUCCESS", data: students };
   } catch (error) {
+    console.error("❌ Service Crash | getAllStudents:", error);
     return { status: "SERVER_ERROR", message: error.message };
   }
 };
@@ -27,10 +29,18 @@ export const getStudentById = async (studentId) => {
       "branch",
       "name location"
     );
-    if (!student) return { status: "NOT_FOUND", message: "Student not found" };
+
+    if (!student) {
+      console.warn(
+        "⚠️ Service Warning | getStudentById: Student not found",
+        studentId
+      );
+      return { status: "NOT_FOUND", message: "Student not found" };
+    }
 
     return { status: "SUCCESS", data: student };
   } catch (error) {
+    console.error("❌ Service Crash | getStudentById:", error);
     return { status: "SERVER_ERROR", message: error.message };
   }
 };
@@ -41,10 +51,18 @@ export const updateStudentById = async (studentId, updateData) => {
     const updated = await Student.findByIdAndUpdate(studentId, updateData, {
       new: true,
     });
-    if (!updated) return { status: "NOT_FOUND", message: "Student not found" };
+
+    if (!updated) {
+      console.warn(
+        "⚠️ Service Warning | updateStudentById: Student not found",
+        studentId
+      );
+      return { status: "NOT_FOUND", message: "Student not found" };
+    }
 
     return { status: "SUCCESS", data: updated };
   } catch (error) {
+    console.error("❌ Service Crash | updateStudentById:", error);
     return { status: "SERVER_ERROR", message: error.message };
   }
 };
@@ -53,9 +71,18 @@ export const updateStudentById = async (studentId, updateData) => {
 export const deleteStudentById = async (studentId) => {
   try {
     const deleted = await Student.findByIdAndDelete(studentId);
-    if (!deleted) return { status: "NOT_FOUND", message: "Student not found" };
+
+    if (!deleted) {
+      console.warn(
+        "⚠️ Service Warning | deleteStudentById: Student not found",
+        studentId
+      );
+      return { status: "NOT_FOUND", message: "Student not found" };
+    }
+
     return { status: "SUCCESS", data: deleted };
   } catch (error) {
+    console.error("❌ Service Crash | deleteStudentById:", error);
     return { status: "SERVER_ERROR", message: error.message };
   }
 };

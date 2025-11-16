@@ -11,6 +11,22 @@ const studentSchema = new mongoose.Schema(
     dateOfBirth: { type: Date },
     guardianName: { type: String },
     isActive: { type: Boolean, default: true },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other"],
+    },
+    contactNumber: {
+      type: String,
+      trim: true,
+    },
+    address: {
+      type: String,
+      trim: true,
+    },
+    enrollmentDate: {
+      type: Date,
+      default: Date.now,
+    },
   },
   { timestamps: true }
 );

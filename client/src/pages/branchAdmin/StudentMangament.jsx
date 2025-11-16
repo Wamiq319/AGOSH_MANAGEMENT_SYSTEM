@@ -1,3 +1,6 @@
+// ===============================
+// Updated StudentManagementPage.jsx
+// ===============================
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -6,6 +9,7 @@ import {
   createResource,
   updateResource,
 } from "@/redux/slices/resourcesSLice";
+
 import {
   DataTable,
   ConfirmationModal,
@@ -14,6 +18,7 @@ import {
   FormModal,
   Toast,
 } from "@/components";
+
 import {
   FaTrash,
   FaEdit,
@@ -29,6 +34,7 @@ import {
 export const StudentManagementPage = () => {
   const dispatch = useDispatch();
   const { data, status, error } = useSelector((state) => state.resources);
+
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
@@ -37,7 +43,8 @@ export const StudentManagementPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState(null);
 
-  // Fetch all students
+  const user = JSON.parse(localStorage.getItem("user"));
+
   useEffect(() => {
     dispatch(fetchResources({ resource: "students" }));
   }, [dispatch]);
@@ -48,91 +55,90 @@ export const StudentManagementPage = () => {
   };
 
   const confirmDelete = async () => {
-    if (deleteId) {
-      const result = await dispatch(
-        deleteResource({ resource: "students", id: deleteId })
-      );
-      if (result.meta.requestStatus === "fulfilled") {
-        setToast({ message: "Student deleted successfully.", type: "success" });
-        dispatch(fetchResources({ resource: "students" }));
-      } else {
-        setToast({
-          message: result.payload || "Failed to delete student.",
-          type: "error",
-        });
-      }
-      setDeleteId(null);
-      setIsConfirmOpen(false);
+    if (!deleteId) return;
+
+    const result = await dispatch(
+      deleteResource({ resource: "students", id: deleteId })
+    );
+
+    if (result.meta.requestStatus === "fulfilled") {
+      setToast({ message: "Student deleted successfully.", type: "success" });
+      dispatch(fetchResources({ resource: "students" }));
+    } else {
+      setToast({ message: "Failed to delete student.", type: "error" });
     }
+
+    setDeleteId(null);
+    setIsConfirmOpen(false);
   };
 
-  const handleView = (row) => {
-    setSelectedStudent(row);
-  };
+  const handleView = (row) => setSelectedStudent(row);
 
   const handleEdit = (row) => {
-    setFormMode("edit");
     setSelectedStudent(row);
+    setFormMode("edit");
     setIsFormOpen(true);
   };
 
   const handleAddNew = () => {
-    setFormMode("add");
     setSelectedStudent(null);
+    setFormMode("add");
     setIsFormOpen(true);
   };
 
   const handleFormSubmit = async (formData) => {
     setIsSubmitting(true);
-    try {
-      let result;
-      const { name, branch, dateOfBirth, guardianName, isActive } = formData;
 
-      if (formMode === "add") {
-        result = await dispatch(
-          createResource({
-            resource: "students",
-            body: { name, branch, dateOfBirth, guardianName, isActive },
-          })
-        );
-      } else {
-        result = await dispatch(
-          updateResource({
-            resource: "students",
-            id: selectedStudent._id,
-            body: { name, branch, dateOfBirth, guardianName, isActive },
-          })
-        );
-      }
+    const cleanGenderValue =
+      typeof formData.gender === "object" && formData.gender?.target
+        ? formData.gender.target.value
+        : formData.gender;
 
-      if (result.meta.requestStatus === "fulfilled") {
-        setToast({
-          message: `Student ${
-            formMode === "add" ? "created" : "updated"
-          } successfully.`,
-          type: "success",
-        });
-        dispatch(fetchResources({ resource: "students" }));
-        setIsFormOpen(false);
-      } else {
-        setToast({
-          message: result.payload || "An error occurred.",
-          type: "error",
-        });
-      }
-    } catch (e) {
-      console.log(e);
-      setToast({ message: "An unexpected error occurred.", type: "error" });
-    } finally {
-      setIsSubmitting(false);
+    const body = {
+      name: formData.name,
+      branch: user.branch,
+      dateOfBirth: formData.dateOfBirth,
+      guardianName: formData.guardianName,
+      gender: cleanGenderValue,
+      contactNumber: formData.contactNumber,
+      address: formData.address,
+    };
+
+    let result;
+
+    if (formMode === "add") {
+      result = await dispatch(createResource({ resource: "students", body }));
+    } else {
+      result = await dispatch(
+        updateResource({ resource: "students", id: selectedStudent._id, body })
+      );
     }
+
+    if (result.meta.requestStatus === "fulfilled") {
+      setToast({
+        message: `Student ${
+          formMode === "add" ? "created" : "updated"
+        } successfully.`,
+        type: "success",
+      });
+
+      dispatch(fetchResources({ resource: "students" }));
+      setIsFormOpen(false);
+    } else {
+      setToast({
+        message: result.payload || "An error occurred.",
+        type: "error",
+      });
+    }
+
+    setIsSubmitting(false);
   };
 
   const tableHeader = [
     { label: "Student Name", key: "name" },
     { label: "Branch", key: "branch.name" },
     { label: "Guardian", key: "guardianName" },
-    { label: "Active", key: "isActive" },
+    { label: "Contact", key: "contactNumber" },
     { label: "Created On", key: "createdAt" },
   ];
 
@@ -159,43 +165,34 @@ export const StudentManagementPage = () => {
 
   const getFormFields = () => [
     { label: "Student Name", name: "name", type: "text", required: true },
+    { label: "Date of Birth", name: "dateOfBirth", type: "date" },
+    { label: "Guardian Name", name: "guardianName", type: "text" },
     {
-      label: "Branch ID",
-      name: "branch",
-      type: "text",
-      placeholder: "Enter branch ObjectId",
+      label: "Gender",
+      name: "gender",
+      type: "dropdown",
       required: true,
+      options: [
+        { label: "Male", value: "Male" },
+        { label: "Female", value: "Female" },
+        { label: "Other", value: "Other" },
+      ],
     },
-    {
-      label: "Date of Birth",
-      name: "dateOfBirth",
-      type: "date",
-      required: false,
-    },
-    {
-      label: "Guardian Name",
-      name: "guardianName",
-      type: "text",
-      required: false,
-    },
-    {
-      label: "Active Status",
-      name: "isActive",
-      type: "checkbox",
-      required: false,
-    },
+    { label: "Contact Number", name: "contactNumber", type: "text" },
+    { label: "Address", name: "address", type: "textarea" },
   ];
 
   const getInitialData = () => {
     if (formMode === "edit" && selectedStudent) {
       return {
-        name: selectedStudent.name,
-        branch: selectedStudent.branch?._id || "",
+        name: selectedStudent.name || "",
         dateOfBirth: selectedStudent.dateOfBirth
           ? selectedStudent.dateOfBirth.split("T")[0]
           : "",
-        guardianName: selectedStudent.guardianName,
-        isActive: selectedStudent.isActive,
+        guardianName: selectedStudent.guardianName || "",
+        gender: selectedStudent.gender || "",
+        contactNumber: selectedStudent.contactNumber || "",
+        address: selectedStudent.address || "",
       };
     }
     return {};
@@ -215,6 +212,7 @@ export const StudentManagementPage = () => {
         <h1 className="text-3xl font-bold text-orange-600 flex items-center gap-2">
           <FaUserGraduate /> Student Management
         </h1>
+
         <Button
           onClick={handleAddNew}
           variant="filled"
@@ -240,7 +238,7 @@ export const StudentManagementPage = () => {
           dynamicButtons={getButtons}
         />
       ) : (
-        <div className="text-center text-gray-500 py-12 bg-white rounded-lg shadow-sm border border-gray-100">
+        <div className="text-center text-gray-500 py-12 bg-white rounded-lg shadow-sm border">
           <p className="text-lg font-medium">No students found.</p>
           <p className="text-sm text-gray-400 mt-2">
             Click “Add Student” to register a new student.
@@ -248,7 +246,6 @@ export const StudentManagementPage = () => {
         </div>
       )}
 
-      {/* View Modal */}
       <Modal
         isOpen={!!selectedStudent && !isFormOpen}
         onClose={() => setSelectedStudent(null)}
@@ -295,8 +292,7 @@ export const StudentManagementPage = () => {
                 <FaUserTie className="mr-2" /> Branch Information
               </h3>
               <p>
-                <strong>Branch:</strong>{" "}
-                {selectedStudent.branch?.name || selectedStudent.branch}
+                <strong>Branch:</strong> {selectedStudent.branch?.name}
               </p>
             </div>
 
@@ -321,7 +317,6 @@ export const StudentManagementPage = () => {
         )}
       </Modal>
 
-      {/* Form Modal */}
       <Modal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
@@ -337,7 +332,6 @@ export const StudentManagementPage = () => {
         />
       </Modal>
 
-      {/* Delete Confirmation */}
       <ConfirmationModal
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}

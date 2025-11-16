@@ -16,7 +16,7 @@ const InputField = ({
   rows = 6,
   step,
   error,
-  disabled = false, 
+  disabled = false,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [preview, setPreview] = useState(value || null);

@@ -14,13 +14,13 @@ const Dropdown = ({
   const dropdownRef = useRef(null);
 
   const handleSelect = (value) => {
-    onChange({ target: { value } });
+    onChange(value); // send value directly
     setIsOpen(false);
   };
 
-  // Direct default string for English
   const selectedLabel =
-    options.find((opt) => opt.value === selectedValue)?.label || "Select an option";
+    options.find((opt) => opt.value === selectedValue)?.label ||
+    "Select an option";
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -69,11 +69,15 @@ const Dropdown = ({
                 onClick={() => handleSelect(option.value)}
               >
                 <span>{option.label}</span>
-                {selectedValue === option.value && <FaCheck className="text-sm" />}
+                {selectedValue === option.value && (
+                  <FaCheck className="text-sm" />
+                )}
               </div>
             ))
           ) : (
-            <div className="px-3 py-2 text-gray-500 text-sm">No options available</div>
+            <div className="px-3 py-2 text-gray-500 text-sm">
+              No options available
+            </div>
           )}
         </div>
       )}
