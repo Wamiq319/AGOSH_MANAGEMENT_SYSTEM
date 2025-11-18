@@ -5,40 +5,43 @@ const Button = ({
   children,
   onClick,
   type = "button",
-  variant = "filled", // "filled" | "outline"
-  color = "blue", // "blue" | "orange" | "white"
-  rounded = true, // true = pill, false = small rounded
+
+  color = "blue",
+
   className = "",
   disabled = false,
+
+  ...rest // accept all extra old props safely
 }) => {
   const baseStyles =
-    "px-6 py-2.5 font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 cursor-pointer";
+    "px-5 py-3 font-semibold text-sm md:text-base transition-all duration-200 select-none cursor-pointer shadow-sm active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-offset-1";
 
-  const shape = rounded ? "rounded-full" : "rounded-md";
+  // Always slight rounding (Pakistani design)
+  const shape = "rounded-lg";
 
-  const variants = {
-    filled: {
-      blue: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
-      orange:
-        "bg-orange-600 text-white hover:bg-orange-700 focus:ring-orange-500",
-      white:
-        "bg-white text-blue-600 border border-blue-600 hover:bg-blue-50 focus:ring-blue-500",
-    },
-    outline: {
-      blue: "bg-transparent text-blue-600 border border-blue-600 hover:bg-blue-50 focus:ring-blue-500",
-      orange:
-        "bg-transparent text-orange-600 border border-orange-600 hover:bg-orange-50 focus:ring-orange-500",
-      white:
-        "bg-transparent text-white border border-white hover:bg-white hover:text-blue-600 focus:ring-white",
-    },
+  // Backward compatible color mapping
+  // Even if old code passes: white, outline, variant, etc.
+  const colorMap = {
+    blue: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
+    orange:
+      "bg-orange-600 text-white hover:bg-orange-700 focus:ring-orange-500",
+    red: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
+
+    // fallback colors because old code used these:
+    white: "bg-white text-blue-700 border border-blue-600 hover:bg-blue-50",
+    yellow: "bg-yellow-500 text-white hover:bg-yellow-600",
+    green: "bg-green-600 text-white hover:bg-green-700",
   };
 
-  const disabledStyles = "disabled:opacity-50 disabled:cursor-not-allowed";
+  const appliedColor = colorMap[color] || colorMap.blue; // safe fallback
+
+  const disabledStyles =
+    "disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100";
 
   const classes = clsx(
     baseStyles,
     shape,
-    variants[variant][color],
+    appliedColor,
     disabledStyles,
     className
   );
@@ -49,6 +52,7 @@ const Button = ({
       onClick={onClick}
       className={classes}
       disabled={disabled}
+      {...rest} // pass extra props to avoid breaking older code
     >
       {children}
     </button>

@@ -11,6 +11,7 @@ import {
   DonorDashboard,
   DonorAdminLayout,
   StudentManagementPage,
+  DonorRegistrationPage,
 } from "@/pages";
 
 const AppRouter = () => {
@@ -20,6 +21,7 @@ const AppRouter = () => {
         {/* Website Routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register-donor" element={<DonorRegistrationPage />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<HeadAdminLayout />}>

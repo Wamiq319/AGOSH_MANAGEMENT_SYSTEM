@@ -3,7 +3,17 @@ import { sendResponse } from "../utils/index.js";
 
 // ------------------ REGISTER ------------------
 export const register = async (req, res) => {
-  const { name, email, password, role, department, rollNo, profile } = req.body;
+  const {
+    name,
+    email,
+    password,
+    role,
+    department,
+    rollNo,
+    profile,
+    address,
+    phoneNumber,
+  } = req.body;
 
   if (!name || !email || !password || !role)
     return sendResponse(
@@ -20,6 +30,8 @@ export const register = async (req, res) => {
     department,
     rollNo,
     profile,
+    address,
+    phoneNumber,
   });
 
   switch (result.status) {
