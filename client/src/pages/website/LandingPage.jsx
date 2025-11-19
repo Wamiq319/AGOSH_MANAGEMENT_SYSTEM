@@ -27,11 +27,11 @@ const HeroSection = () => (
 
       <Button
         rounded
-        color="gold"
+        color="blue"
         className="mt-8 px-8 py-4 text-lg shadow-lg"
-        onClick={() => (window.location.href = "/upload-donation")}
+        onClick={() => (window.location.href = "/register-donor")}
       >
-        Upload Donation Proof
+        Register As Donor
       </Button>
     </div>
   </section>
@@ -142,7 +142,7 @@ const CTASection = () => (
       rounded
       color="gold"
       className="mt-8 text-lg px-8 py-4"
-      onClick={() => (window.location.href = "/upload-donation")}
+      onClick={() => (window.location.href = "/register-donor")}
     >
       Upload Donation Proof
     </Button>

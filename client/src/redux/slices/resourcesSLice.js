@@ -9,6 +9,47 @@ const handleApiResponse = async (response) => {
   return result;
 };
 
+// Helper to prepare request options for fetch, handling file uploads
+const prepareRequestOptions = (method, body) => {
+  let headers = {};
+  let requestBody;
+
+  // Check if the body contains a File object (e.g., for receiptImage)
+  const hasFile = Object.values(body).some(
+    (value) => value instanceof File || (Array.isArray(value) && value[0] instanceof File)
+  );
+
+  if (hasFile) {
+    const formData = new FormData();
+    for (const key in body) {
+      if (Object.prototype.hasOwnProperty.call(body, key)) {
+        // If the value is a File object, append it directly
+        if (body[key] instanceof File) {
+          formData.append(key, body[key]);
+        } else if (Array.isArray(body[key]) && body[key][0] instanceof File) {
+          // If it's an array of files (though receiptImage is single)
+          body[key].forEach((file) => formData.append(key, file));
+        }
+        else {
+          formData.append(key, body[key]);
+        }
+      }
+    }
+    requestBody = formData;
+    // Do NOT set Content-Type header for FormData, browser sets it automatically with boundary
+  } else {
+    headers["Content-Type"] = "application/json";
+    requestBody = JSON.stringify(body);
+  }
+
+  return {
+    method,
+    headers,
+    body: requestBody,
+    credentials: "include",
+  };
+};
+
 // ====================== AUTH ======================
 
 // --- Register User ---
@@ -126,12 +167,8 @@ export const createResource = createAsyncThunk(
   "resources/create",
   async ({ resource, body }, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${API_URL}/api/${resource}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-        credentials: "include",
-      });
+      const options = prepareRequestOptions("POST", body);
+      const res = await fetch(`${API_URL}/api/${resource}`, options);
       const { data, success, message } = await handleApiResponse(res);
       return { resource, data, success, message };
     } catch (err) {
@@ -145,12 +182,8 @@ export const updateResource = createAsyncThunk(
   "resources/update",
   async ({ resource, id, body }, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${API_URL}/api/${resource}/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-        credentials: "include",
-      });
+      const options = prepareRequestOptions("PUT", body);
+      const res = await fetch(`${API_URL}/api/${resource}/${id}`, options);
       const { data, success, message } = await handleApiResponse(res);
       return { resource, id, data, success, message };
     } catch (err) {

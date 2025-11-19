@@ -17,16 +17,16 @@ const InputField = ({
   step,
   error,
   disabled = false,
+  ...props // allow extra props without breaking
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [preview, setPreview] = useState(value || null);
   const { lang } = useSelector((state) => state.lang) || defaultLangState;
 
   const inputClasses = `
-    w-full p-3 border-b-2 border-[#185D86] rounded-md
-    focus:outline-dashed focus:outline-2 focus:outline-[#185D86] 
-    transition-all duration-200 bg-white text-[#12254D] placeholder-[#8CA6B8]
-    focus:bg-[#E5F3FB]
+    w-full p-3 border border-blue-500 rounded-md
+    focus:outline-none focus:ring-2 focus:ring-blue-500
+    transition-all duration-200 bg-white text-[#12254D] placeholder-blue-300
     ${disabled ? "opacity-60 cursor-not-allowed bg-gray-100" : ""}
   `;
 
@@ -35,14 +35,13 @@ const InputField = ({
 
   const eyePosition = lang === "ar" ? "left-0 pl-3" : "right-0 pr-3";
 
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
+  const convertToBase64 = (file) =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
       reader.onerror = (err) => reject(err);
     });
-  };
 
   const handleImageUpload = async (e) => {
     if (disabled) return;
@@ -61,9 +60,8 @@ const InputField = ({
 
   return (
     <div className={`w-full mb-4 ${className}`}>
-      <label className="block text-sm font-bold mb-2 text-[#12254D]">
-        {label}
-        {required && <span className="text-red-600 ml-1">*</span>}
+      <label className="block text-sm font-semibold mb-2 text-blue-700">
+        {label} {required && <span className="text-red-600">*</span>}
       </label>
 
       {type === "textarea" ? (
@@ -75,11 +73,12 @@ const InputField = ({
           rows={rows}
           disabled={disabled}
           className={inputClasses}
+          {...props}
         />
       ) : type === "image" ? (
         <div className="space-y-3">
           {preview ? (
-            <div className="relative w-full h-40 border border-[#185D86] rounded-lg overflow-hidden">
+            <div className="relative w-full h-40 border border-blue-500 rounded-md overflow-hidden">
               <img
                 src={preview}
                 alt="Preview"
@@ -97,13 +96,11 @@ const InputField = ({
             </div>
           ) : (
             <label
-              className={`flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-[#185D86] rounded-lg ${
-                disabled
-                  ? "opacity-60 cursor-not-allowed bg-gray-100"
-                  : "cursor-pointer bg-[#F8FAFC] hover:bg-[#E5F3FB]"
-              } transition`}
+              className={`flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-blue-500 rounded-md cursor-pointer bg-[#F0F8FF] hover:bg-blue-50 transition ${
+                disabled ? "opacity-60 cursor-not-allowed bg-gray-100" : ""
+              }`}
             >
-              <span className="text-sm text-[#185D86] text-center">
+              <span className="text-blue-500 text-sm text-center">
                 {disabled ? "Upload disabled" : "Click to upload"}
               </span>
               <input
@@ -127,18 +124,19 @@ const InputField = ({
             onChange={onChange}
             disabled={disabled}
             className={inputClasses}
+            {...props}
           />
           {type === "password" && (
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className={`absolute inset-y-0 flex items-center ${eyePosition} pr-3`}
+              className={`absolute inset-y-0 flex items-center ${eyePosition}`}
               disabled={disabled}
             >
               {showPassword ? (
-                <HiEyeOff size={20} className="text-[#185D86]" />
+                <HiEyeOff size={20} className="text-blue-500" />
               ) : (
-                <HiEye size={20} className="text-[#185D86]" />
+                <HiEye size={20} className="text-blue-500" />
               )}
             </button>
           )}

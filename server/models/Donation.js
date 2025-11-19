@@ -7,19 +7,38 @@ const donationSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+
     branch: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Branch",
       required: true,
     },
+
     amount: {
       type: Number,
       required: true,
     },
+
     transactionId: {
       type: String,
       required: true,
       unique: true,
+    },
+
+    receiptImage: {
+      type: String,
+      required: true,
+    },
+
+    status: {
+      type: String,
+      enum: ["PENDING", "APPROVED", "REJECTED"],
+      default: "PENDING",
+    },
+
+    notes: {
+      type: String,
+      default: "",
     },
   },
   { timestamps: true }

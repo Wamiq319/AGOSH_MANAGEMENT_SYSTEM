@@ -15,9 +15,7 @@ export const getAdminDashboardData = async () => {
     recentStudents,
   ] = await Promise.all([
     Student.countDocuments(),
-    Donation.aggregate([
-      { $group: { _id: null, total: { $sum: "$amount" } } },
-    ]),
+    Donation.aggregate([{ $group: { _id: null, total: { $sum: "$amount" } } }]),
     Branch.countDocuments(),
     User.countDocuments(),
     Donation.find()
@@ -25,10 +23,7 @@ export const getAdminDashboardData = async () => {
       .limit(5)
       .populate("donor", "name")
       .populate("branch", "name"),
-    Student.find()
-      .sort({ createdAt: -1 })
-      .limit(5)
-      .populate("branch", "name"),
+    Student.find().sort({ createdAt: -1 }).limit(5).populate("branch", "name"),
   ]);
 
   return {
