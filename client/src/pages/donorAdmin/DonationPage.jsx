@@ -170,8 +170,8 @@ export const DonationManagementPage = () => {
       required: true,
     },
     { label: "Amount", name: "amount", type: "number", required: true },
-    { label: "Receipt", name: "receiptImage", type: "file", required: true },
-    { label: "Notes", name: "notes", type: "text", required: false },
+    { label: "Receipt", name: "receiptImage", type: "image", required: true },
+    { label: "Notes", name: "notes", type: "textarea", required: false },
   ];
 
   const getInitialData = () => {

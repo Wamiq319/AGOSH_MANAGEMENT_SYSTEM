@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { InputField, Dropdown } from "@/components/input";
+import { InputField, Dropdown, ImageInput, TextArea } from "@/components/input";
 import { Button } from "@/components/ui"; // Import Button
 
 const defaultInitialData = {};
@@ -27,8 +27,12 @@ const FormModal = ({
 
   // Handle normal field change
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, files } = e.target;
+    if (type === "file") {
+      setFormData((prev) => ({ ...prev, [name]: files[0] }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   // Handle dropdown select change
@@ -69,12 +73,19 @@ const FormModal = ({
 
       case "image":
         return (
-          <InputField
+          <ImageInput
             {...props}
-            type="image"
+            onChange={handleChange}
+            initialValue={value}
+          />
+        );
+      
+      case "textarea":
+        return (
+          <TextArea
+            {...props}
             value={value}
             onChange={handleChange}
-            color="blue" // theme color
           />
         );
 

@@ -1,19 +1,40 @@
 import * as donationService from "../services/index.js";
-import { sendResponse } from "../utils/index.js";
+import { sendResponse, uploadOnCloudinary } from "../utils/index.js";
 
 //
 // ------------------------- CONTROLLER FUNCTIONS -------------------------
 //
 
 export const createDonation = async (req, res) => {
+  console.log("Request Body:", req.body);
+  console.log("Request File:", req.file);
+
   try {
     const data = {
       donor: req.body.donor,
       branch: req.body.branch,
       amount: req.body.amount,
-      receiptImage: req.file?.path || req.body.receiptImage,
       notes: req.body.notes || "",
     };
+
+    if (req.file) {
+      const receiptImage = await uploadOnCloudinary(req.file.path);
+      if (!receiptImage) {
+        return sendResponse(
+          res,
+          { success: false, message: "Failed to upload receipt image." },
+          400
+        );
+      }
+      data.receiptImage = receiptImage.secure_url;
+    } else {
+      return sendResponse(
+        res,
+        { success: false, message: "Receipt image is required." },
+        400
+      );
+    }
+
     const result = await donationService.createDonation(data);
     if (result.status === "SUCCESS") {
       return sendResponse(res, { success: true, data: result.data }, 201);
@@ -35,11 +56,23 @@ export const createDonation = async (req, res) => {
 };
 
 export const updateDonation = async (req, res) => {
+  console.log("Update Request Body:", req.body);
+  console.log("Update Request File:", req.file);
+
   try {
     const updateData = { ...req.body };
     if (req.file) {
-      updateData.receiptImage = req.file.path;
+      const receiptImage = await uploadOnCloudinary(req.file.path);
+      if (!receiptImage) {
+        return sendResponse(
+          res,
+          { success: false, message: "Failed to upload receipt image." },
+          400
+        );
+      }
+      updateData.receiptImage = receiptImage.secure_url;
     }
+
     const result = await donationService.updateDonation(
       req.params.id,
       updateData
