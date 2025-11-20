@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as donationController from "../controllers/index.js";
-import { upload } from "../middlewares/upload.js";
+import { upload } from "../middelwares/upload.js";
 
 const router = Router();
 
@@ -12,7 +12,11 @@ router.post(
 );
 
 // UPDATE Donation (Admin / Branch Admin)
-router.put("/:id", upload.single("receiptImage"), donationController.updateDonation);
+router.put(
+  "/:id",
+  upload.single("receiptImage"),
+  donationController.updateDonation
+);
 
 // DELETE Donation (Head Office Admin)
 router.delete("/:id", donationController.deleteDonation);
@@ -24,7 +28,7 @@ router.get("/all", donationController.getAllDonations);
 router.get("/:id", donationController.getDonationById);
 
 // GET Donations by Donor (Donor)
-router.get("/donor/me", donationController.getDonationsByDonor);
+router.get("/donor/:userId", donationController.getDonationsByDonor);
 
 // GET Donations by Branch (Admin / Branch Admin)
 router.get("/branch/:branchId", donationController.getDonationsByBranch);

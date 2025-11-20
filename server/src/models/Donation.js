@@ -19,12 +19,6 @@ const donationSchema = new mongoose.Schema(
       required: true,
     },
 
-    transactionId: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-
     receiptImage: {
       type: String,
       required: true,

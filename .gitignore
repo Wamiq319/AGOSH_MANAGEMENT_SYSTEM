@@ -1,0 +1,99 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+.report/
+
+# Node.js
+# attention: if you're using the "type":"module" in your package.json you should rename .gitignore to .ignore
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Editor directories and files
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.bak
+*.vssscc
+
+# Environment variables
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Uploads
+/client/public/uploads/
+
+# Coverage directory
+/coverage/
+
+# Next.js
+.next/
+
+# Nuxt.js
+.nuxt/
+.output/
+
+# Gatsby
+.cache/
+public/
+
+# Vuepress
+.vuepress/dist/
+
+# SvelteKit
+.svelte-kit/
+
+# Docusaurus
+build/
+
+# Jekyll
+_site/
+
+# TypeScript
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm/
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache/
+
+# Storybook
+.storybook/out/
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv vault files
+.env.vault
+.env.*.vault
+
+# parcel-bundler cache (https://parceljs.org/)
+.parcel-cache
+
+# Server
+/server/node_modules/
+/server/dist/
+/server/.env

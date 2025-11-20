@@ -27,10 +27,16 @@ export const DonationManagementPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState(null);
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const resource = user ? `donations/donor/${user._id}` : null;
+  const donations = data[resource] || [];
+
   useEffect(() => {
-    dispatch(fetchResources({ resource: "donations" }));
+    if (resource) {
+      dispatch(fetchResources({ resource }));
+    }
     dispatch(fetchResources({ resource: "branches" }));
-  }, [dispatch]);
+  }, [dispatch, resource]);
 
   const handleAddNew = () => {
     setFormMode("add");
@@ -59,7 +65,9 @@ export const DonationManagementPage = () => {
           message: "Donation deleted successfully.",
           type: "success",
         });
-        dispatch(fetchResources({ resource: "donations" }));
+        if (resource) {
+          dispatch(fetchResources({ resource }));
+        }
       } else {
         setToast({
           message: result.payload || "Failed to delete donation.",
@@ -80,11 +88,12 @@ export const DonationManagementPage = () => {
         amount: formData.amount,
         receiptImage: formData.receiptImage, // file handled in slice
         notes: formData.notes || "",
+        donor: user._id, // Add donor id to the body
       };
 
       if (formMode === "add") {
         result = await dispatch(
-          createResource({ resource: "donations", body })
+          createResource({ resource: "donations/create", body })
         );
       } else {
         result = await dispatch(
@@ -103,7 +112,9 @@ export const DonationManagementPage = () => {
           } successfully.`,
           type: "success",
         });
-        dispatch(fetchResources({ resource: "donations" }));
+        if (resource) {
+          dispatch(fetchResources({ resource }));
+        }
         setIsFormOpen(false);
       } else {
         setToast({
@@ -196,18 +207,18 @@ export const DonationManagementPage = () => {
         </Button>
       </div>
 
-      {status === "loading" && !data.donations?.length ? (
+      {status === "loading" && !donations.length ? (
         <div className="flex justify-center py-10">
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           <span className="ml-3 text-gray-600">Loading donations...</span>
         </div>
       ) : error ? (
         <p className="text-red-500">{error}</p>
-      ) : data.donations?.length > 0 ? (
+      ) : donations.length > 0 ? (
         <DataTable
           heading="All Donations"
           tableHeader={tableHeader}
-          tableData={data.donations}
+          tableData={donations}
           dynamicButtons={getButtons}
         />
       ) : (

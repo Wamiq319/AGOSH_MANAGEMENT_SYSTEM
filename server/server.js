@@ -9,7 +9,7 @@ import {
   studentRoutes,
   dashboardRoutes,
   donationRoutes,
-} from "./routes/index.js";
+} from "./src/routes/index.js";
 
 // Load environment variables
 dotenv.config();
