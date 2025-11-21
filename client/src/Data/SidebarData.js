@@ -18,11 +18,6 @@ export const SidebarMenus = {
       Icon: Building,
       path: "/admin/branches",
     },
-    {
-      label: "Reports",
-      Icon: FileText,
-      path: "/admin/reports", // optional for future
-    },
   ],
 
   BRANCH_ADMIN: [
