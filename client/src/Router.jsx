@@ -13,7 +13,8 @@ import {
   StudentManagementPage,
   DonorRegistrationPage,
   DonationManagementPage,
-  DonorManagementPage
+  DonorManagementPage,
+  StudentsManagementPage,
 } from "@/pages";
 
 const AppRouter = () => {
@@ -29,7 +30,8 @@ const AppRouter = () => {
         <Route path="/admin" element={<HeadAdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="branches" element={<BranchesManagementPage />} />
-          <Route path="donors" element={<DonorManagementPage/>}/>
+          <Route path="donors" element={<DonorManagementPage />} />
+          <Route path="students" element={<StudentsManagementPage />} />
         </Route>
 
         {/* Branch Admin Routes */}

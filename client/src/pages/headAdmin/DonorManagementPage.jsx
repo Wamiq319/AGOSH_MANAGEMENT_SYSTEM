@@ -22,6 +22,9 @@ const DonorManagementPage = () => {
     dispatch(fetchResources({ resource: "users" }));
   }, [dispatch]);
 
+console.log(data);
+
+
   const donorList = data.users?.filter((u) => u.role === "DONOR") || [];
 
   const handleView = (row) => {
@@ -136,7 +139,7 @@ const DonorManagementPage = () => {
         {selectedDonor && (
           <div className="space-y-6">
             {/* Header Card */}
-            <div className="flex flex-col items-center text-center p-5 rounded-2xl shadow-xs border border-orange-100">
+            <div className="flex flex-col items-center text-center p-5 rounded-2xl shadow-xs border border-orange-100 bg-orange-50">
               <div className="w-20 h-20 flex items-center justify-center rounded-full bg-orange-600 text-white text-3xl font-bold shadow-md">
                 {selectedDonor.name.charAt(0)}
               </div>

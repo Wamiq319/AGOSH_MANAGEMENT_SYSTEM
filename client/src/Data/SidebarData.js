@@ -8,7 +8,7 @@ export const SidebarMenus = {
       path: "/admin",
     },
     {
-      label: "Branch Management",
+      label: "Branches Management",
       Icon: Building,
       path: "/admin/branches",
     },
@@ -16,6 +16,11 @@ export const SidebarMenus = {
       label: "Donors Management",
       Icon: Users,
       path: "/admin/donors",
+    },
+    {
+      label: "Students Management",
+      Icon: Users,
+      path: "/admin/students",
     },
   ],
 
