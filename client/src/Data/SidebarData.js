@@ -1,10 +1,4 @@
-import {
-  LayoutDashboard,
-  FileText,
-  Users,
-  DollarSign,
-  Building,
-} from "lucide-react";
+import { LayoutDashboard, Users, DollarSign, Building } from "lucide-react";
 
 export const SidebarMenus = {
   HEAD_OFFICE_ADMIN: [
@@ -17,6 +11,11 @@ export const SidebarMenus = {
       label: "Branch Management",
       Icon: Building,
       path: "/admin/branches",
+    },
+    {
+      label: "Donors Management",
+      Icon: Users,
+      path: "/admin/donors",
     },
   ],
 
