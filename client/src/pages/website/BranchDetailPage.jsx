@@ -58,8 +58,11 @@ const BranchDetailPage = () => {
   const { data, status, error } = useSelector((state) => state.resources);
   const branch = data.branchesById;
   const students = data.students;
+  const studentsForBranch = students?.filter(
+    (student) => student.branch._id === branchId
+  );
 
-  console.log(data);
+  console.log(students);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -80,7 +83,7 @@ const BranchDetailPage = () => {
 
   if (isLoading || status === "loading") {
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-50">
+      <div className="flex justify-center items-center h-screen ">
         <p className="ml-3 text-lg text-gray-600">Loading branch details...</p>
       </div>
     );
@@ -130,7 +133,7 @@ const BranchDetailPage = () => {
   return (
     <>
       <Navbar />
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 min-h-screen ">
         {/* -------------------- Branch Information Header -------------------- */}
         <div className="bg-white p-6 rounded-xl shadow-md border-b-4 border-orange-600 mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 flex items-center mb-1">
@@ -151,25 +154,25 @@ const BranchDetailPage = () => {
             icon={FaMapMarkerAlt}
             label="Location"
             value={branch.location}
-            colorClass="text-red-500" // Location usually uses Red for Maps/Pins
+            colorClass="text-red-500"
           />
           <InfoItem
             icon={FaPhone}
             label="Phone Number"
             value={branch.phoneNumber}
-            colorClass="text-green-600" // Phone usually uses Green
+            colorClass="text-green-600"
           />
           <InfoItem
             icon={FaUserTie}
             label="Admin"
             value={branch.admin?.name || "N/A"}
-            colorClass="text-indigo-600" // Secondary accent color
+            colorClass="text-indigo-600"
           />
           <InfoItem
             icon={FaChild}
             label="Total Students"
-            value={students?.length || 0}
-            colorClass="text-orange-600" // Primary color for key metrics
+            value={studentsForBranch?.length || 0}
+            colorClass="text-orange-600"
           />
         </div>
 
@@ -222,32 +225,27 @@ const BranchDetailPage = () => {
           Sponsorship
         </h2>
 
-        {students?.length > 0 ? (
+        {studentsForBranch?.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-            {students.map((student) => (
+            {studentsForBranch.map((student) => (
               <div
                 key={student._id}
                 className="p-4 text-center flex flex-col items-center bg-white rounded-lg shadow-sm hover:shadow-md hover:border-indigo-300 border border-gray-200 transition-all duration-300"
               >
-                {/* Student Image Placeholder - Subtle Indigo background */}
                 <div className="w-16 h-16 bg-indigo-50 rounded-full mb-3 flex items-center justify-center text-indigo-600 text-2xl font-bold border border-indigo-200">
                   {student.name ? student.name.charAt(0) : "S"}
                 </div>
-
                 <h3 className="text-md font-semibold text-gray-800 line-clamp-1 mb-1">
                   {student.name || `Student #${student._id.slice(-4)}`}
                 </h3>
                 <p className="text-xs text-gray-500 mb-3">
                   {student.age ? `${student.age} yrs` : "Age N/A"}
                 </p>
-
-                {/* Sponsor Button - Secondary Accent Color: Indigo */}
                 <Button
                   onClick={() =>
                     handleSponsorStudent(student._id, student.name)
                   }
                   variant="filled"
-                  // Custom class for Indigo button (Assuming Button component supports custom Tailwind classes)
                   className="mt-2 flex items-center gap-1 text-xs py-2 px-3 w-full justify-center bg-indigo-600 hover:bg-indigo-700 text-white"
                 >
                   <FaHandHoldingHeart size={12} /> Sponsor

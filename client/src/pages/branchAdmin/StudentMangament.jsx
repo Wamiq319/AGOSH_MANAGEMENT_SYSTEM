@@ -44,6 +44,11 @@ export const StudentManagementPage = () => {
   const [toast, setToast] = useState(null);
 
   const user = JSON.parse(localStorage.getItem("user"));
+  const branchId = user?.branch?._id || user?.branch;
+
+  const studentsForBranch = data.students?.filter(
+    (student) => student.branch?._id === branchId
+  );
 
   useEffect(() => {
     dispatch(fetchResources({ resource: "students" }));
@@ -234,7 +239,7 @@ export const StudentManagementPage = () => {
         <DataTable
           heading="All Students"
           tableHeader={tableHeader}
-          tableData={data.students}
+          tableData={studentsForBranch}
           dynamicButtons={getButtons}
         />
       ) : (
