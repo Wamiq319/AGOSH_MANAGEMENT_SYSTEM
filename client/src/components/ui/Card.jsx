@@ -1,121 +1,52 @@
-import React, { useState } from "react";
-import * as Icons from "lucide-react";
-import { Button } from "@/components";
-
-const Card = ({ item, fields, actions }) => {
-  const [expanded, setExpanded] = useState(false);
-
+const Card = ({ item, fields, actions, headerIcon }) => {
   const getValue = (obj, path) =>
     path.split(".").reduce((acc, part) => acc?.[part], obj);
 
-  const calculateDaysLeft = (date) => {
-    if (!date) return 0;
-    return Math.max(
-      0,
-      Math.ceil(
-        (new Date(date).getTime() - new Date().getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
-    );
-  };
+  const branchName = item.title || item.name || "Untitled Branch";
 
   return (
-    <div className="relative w-full h-fit bg-white rounded-2xl p-6 shadow-lg overflow-hidden border border-gray-200 hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1">
-      <div className="flex justify-between items-start">
-        <h3
-          className="relative w-fit bg-gradient-to-r from-blue-600 to-orange-500 p-4 sm:px-8 pr-6 sm:pr-16 py-3 text-base md:text-lg font-bold text-white shadow-md"
-          style={{ clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)" }}
-        >
-          {item.title || "Untitled"}
-        </h3>
-
-        {item.status && (
-          <span
-            className={`text-xs font-bold px-3 py-1 rounded-full border ${
-              item.status === "active"
-                ? "bg-blue-100 text-blue-700 border-blue-300"
-                : "bg-orange-100 text-orange-700 border-orange-300"
-            }`}
-          >
-            {item.status === "active" ? "Active" : "Inactive"}
-          </span>
-        )}
+    <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col">
+      
+      {/* Header Section with Dynamic Icon */}
+      <div className="h-32 bg-gradient-to-r from-blue-600 to-blue-400 flex items-center justify-center">
+        <div className="text-white text-5xl opacity-80">
+          {headerIcon /* Dynamic icon from parent */}
+        </div>
       </div>
 
-      <ul className="mt-5 ml-2 space-y-3 text-gray-700 text-sm">
-        {fields.map(({ key, label, icon }) => {
-          const Icon = Icons[icon];
-          let value = getValue(item, key);
+      {/* Body */}
+      <div className="p-6 flex-1 flex flex-col">
+        
+        {/* Title */}
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">{branchName}</h2>
 
-          if (key === "deadline" && value)
-            value = new Date(value).toLocaleDateString();
-          if (Array.isArray(value)) value = value.join(", ");
-          if (value === undefined || value === null) value = "N/A";
-
-          return (
-            <li key={key} className="flex items-center gap-3">
-              {Icon && <Icon className="w-5 h-5 text-blue-500" />}
-              <span className="font-semibold text-gray-800">{label}:</span>
-              <span className="text-gray-700">{value}</span>
-            </li>
-          );
-        })}
-      </ul>
-
-      {item.description && (
-        <div className="relative ml-2 mt-4">
-          <p
-            className={`text-gray-700 transition-all duration-300 ${
-              expanded ? "line-clamp-none" : "line-clamp-2"
-            }`}
-          >
-            {item.description}
-          </p>
-          {item.description.length > 120 && (
-            <button
-              onClick={() => setExpanded(!expanded)}
-              className="text-blue-600 mt-1 font-semibold hover:underline text-sm"
-            >
-              {expanded ? "See Less" : "See More"}
-            </button>
-          )}
+        {/* Dynamic Fields */}
+        <div className="space-y-3 mb-6 text-gray-600">
+          {fields.map(({ key, icon }, index) => (
+            <div key={index} className="flex items-start">
+              <span className="mt-1 mr-3 text-xl">{icon}</span>
+              <span className="break-word">{getValue(item, key) || "N/A"}</span>
+            </div>
+          ))}
         </div>
-      )}
 
-      <div className="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between flex-wrap gap-2">
-        {actions.map((action, index) => {
-          if (action.type === "text") {
-            let value = getValue(item, action.valueKey);
-            if (action.format === "daysLeft") value = calculateDaysLeft(value);
-            return (
-              <div key={index} className="flex items-center space-x-2">
-                <span className="text-gray-700 font-medium">
-                  {action.label}:
-                </span>
-                <span className="text-orange-600 font-bold text-lg">
-                  {value}
-                </span>
-              </div>
-            );
-          }
-
-          if (action.type === "button") {
-            return (
-              <Button
-                key={index}
-                onClick={() => action.onClick(item)}
-                variant="filled"
-                color="blue"
-                className="flex items-center space-x-2 shadow-md hover:shadow-lg"
-              >
-                <span>{action.label}</span>
-                <Icons.ArrowRight className="w-4 h-4" />
-              </Button>
-            );
-          }
-
-          return null;
-        })}
+        {/* Footer Buttons */}
+        <div className="mt-auto grid grid-cols-2 gap-3">
+          {actions.map((action, index) => (
+            <button
+              key={index}
+              onClick={() => action.onClick(item)}
+              className={
+                action.label === "Donate"
+                  ? "flex items-center justify-center gap-2 px-4 py-2 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors shadow-sm"
+                  : "flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors"
+              }
+            >
+              {action.label}
+              {action.icon && <span>{action.icon}</span>}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

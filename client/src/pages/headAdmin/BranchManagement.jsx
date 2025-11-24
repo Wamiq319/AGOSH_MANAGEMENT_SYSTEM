@@ -26,6 +26,7 @@ import {
   FaEnvelope,
   FaShieldAlt,
   FaCalendarAlt,
+  FaMoneyCheckAlt, 
 } from "react-icons/fa";
 
 export const BranchesManagementPage = () => {
@@ -87,21 +88,37 @@ export const BranchesManagementPage = () => {
     setIsSubmitting(true);
     try {
       let result;
+      // 1. Destructure all fields including new Payment Info
       const {
         name,
         location,
         phoneNumber,
+        accountTitle,
+        bankName,
+        accountNumber,
         adminName,
         adminEmail,
         adminPassword,
       } = formData;
+
+      // 2. Prepare Branch Data Object
+      const branchData = {
+        name,
+        location,
+        phoneNumber,
+        paymentInfo: {
+          accountTitle,
+          bankName,
+          accountNumber,
+        },
+      };
 
       if (formMode === "add") {
         result = await dispatch(
           createResource({
             resource: "branches",
             body: {
-              branch: { name, location, phoneNumber },
+              branch: branchData,
               admin: {
                 name: adminName,
                 email: adminEmail,
@@ -120,7 +137,7 @@ export const BranchesManagementPage = () => {
             resource: "branches",
             id: selectedBranch._id,
             body: {
-              branch: { name, location, phoneNumber },
+              branch: branchData,
               admin,
             },
           })
@@ -153,6 +170,7 @@ export const BranchesManagementPage = () => {
   const tableHeader = [
     { label: "Branch Name", key: "name" },
     { label: "Location", key: "location" },
+    { label: "Bank Name", key: "paymentInfo.bankName" }, // Showing Bank Name in table
     { label: "Admin", key: "admin.name" },
     { label: "Created On", key: "createdAt" },
   ];
@@ -180,6 +198,7 @@ export const BranchesManagementPage = () => {
 
   const getFormFields = () => {
     const fields = [
+      // Basic Info
       { label: "Branch Name", name: "name", type: "text", required: true },
       { label: "Location", name: "location", type: "text", required: true },
       {
@@ -188,6 +207,31 @@ export const BranchesManagementPage = () => {
         type: "text",
         required: true,
       },
+
+      // Payment Info (New Fields)
+      {
+        label: "Account Title",
+        name: "accountTitle",
+        type: "text",
+        required: false,
+        placeholder: "e.g. Agosh Rawalakot",
+      },
+      {
+        label: "Bank / Service Name",
+        name: "bankName",
+        type: "text",
+        required: false,
+        placeholder: "e.g. Easypaisa / HBL",
+      },
+      {
+        label: "Account Number",
+        name: "accountNumber",
+        type: "text",
+        required: false,
+        placeholder: "e.g. 0300-1234567",
+      },
+
+      // Admin Info
       { label: "Admin Name", name: "adminName", type: "text", required: true },
       {
         label: "Admin Email",
@@ -221,6 +265,11 @@ export const BranchesManagementPage = () => {
         name: selectedBranch.name,
         location: selectedBranch.location,
         phoneNumber: selectedBranch.phoneNumber,
+        // Map Payment Info for Edit
+        accountTitle: selectedBranch.paymentInfo?.accountTitle || "",
+        bankName: selectedBranch.paymentInfo?.bankName || "",
+        accountNumber: selectedBranch.paymentInfo?.accountNumber || "",
+        // Map Admin Info
         adminName: selectedBranch.admin?.name,
         adminEmail: selectedBranch.admin?.email,
       };
@@ -306,6 +355,39 @@ export const BranchesManagementPage = () => {
               </div>
             </div>
 
+            {/* Payment Details Section (New) */}
+            <div>
+              <h3 className="text-lg font-semibold text-green-700 border-b pb-2 mb-3 flex items-center">
+                <FaMoneyCheckAlt className="mr-2" /> Payment Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm bg-green-50 p-3 rounded-lg border border-green-100">
+                <div className="flex flex-col">
+                  <span className="text-gray-500 text-xs uppercase tracking-wider">
+                    Bank / Service
+                  </span>
+                  <span className="font-semibold text-gray-800">
+                    {selectedBranch.paymentInfo?.bankName || "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-gray-500 text-xs uppercase tracking-wider">
+                    Account Title
+                  </span>
+                  <span className="font-semibold text-gray-800">
+                    {selectedBranch.paymentInfo?.accountTitle || "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col col-span-2">
+                  <span className="text-gray-500 text-xs uppercase tracking-wider">
+                    Account Number
+                  </span>
+                  <span className="font-mono text-lg font-bold text-green-800">
+                    {selectedBranch.paymentInfo?.accountNumber || "N/A"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
             {/* Admin Details Section */}
             {selectedBranch.admin && (
               <div>
@@ -322,11 +404,6 @@ export const BranchesManagementPage = () => {
                     <FaEnvelope className="text-gray-500 mr-3" />
                     <strong className="mr-2">Email:</strong>{" "}
                     {selectedBranch.admin.email}
-                  </div>
-                  <div className="flex items-center">
-                    <FaShieldAlt className="text-gray-500 mr-3" />
-                    <strong className="mr-2">Password:</strong>{" "}
-                    {selectedBranch.admin.password}
                   </div>
                   <div className="flex items-center">
                     <FaShieldAlt className="text-gray-500 mr-3" />

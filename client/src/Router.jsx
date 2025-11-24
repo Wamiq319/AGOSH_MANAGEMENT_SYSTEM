@@ -15,6 +15,9 @@ import {
   DonationManagementPage,
   DonorManagementPage,
   StudentsManagementPage,
+  DonorExploreBranchesPage,
+  BranchDetailPage,
+  DonatePage
 } from "@/pages";
 
 const AppRouter = () => {
@@ -25,6 +28,9 @@ const AppRouter = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register-donor" element={<DonorRegistrationPage />} />
+        <Route path="/branches" element={<DonorExploreBranchesPage />} />
+        <Route path="/branch/:id" element={<BranchDetailPage/>}/>
+        <Route path="/donate" element={<DonatePage />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<HeadAdminLayout />}>

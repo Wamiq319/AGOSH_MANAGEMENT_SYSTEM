@@ -6,36 +6,52 @@ import { Button } from "@/components";
 // ---------------------- COMPONENTS ----------------------
 
 // HERO SECTION
-const HeroSection = () => (
-  <section className="bg-gradient-to-br from-orange-500 to-blue-600 text-white py-20 px-6">
-    <div className="max-w-6xl mx-auto text-center">
-      <div className="flex justify-center mb-6">
-        <div className="bg-white p-4 rounded-2xl shadow-xl">
-          <img src={Logo} alt="Agosh System" className="w-28 h-auto" />
+const HeroSection = () => {
+  const isLoggedIn = Boolean(localStorage.getItem("user"));
+
+  return (
+    <section className="bg-gradient-to-br from-orange-500 to-blue-600 text-white py-20 px-6">
+      <div className="max-w-6xl mx-auto text-center">
+        <div className="flex justify-center mb-6">
+          <div className="bg-white p-4 rounded-2xl shadow-xl">
+            <img src={Logo} alt="Agosh System" className="w-28 h-auto" />
+          </div>
         </div>
+
+        <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
+          Support Students Across Pakistan
+        </h1>
+
+        <p className="text-lg mt-4 max-w-2xl mx-auto text-blue-100">
+          Agosh connects generous donors with deserving students. Donate
+          externally and upload proof of your donation to make a real impact in
+          education.
+        </p>
+
+        {isLoggedIn ? (
+          <Button
+            rounded
+            color="blue"
+            className="mt-8 px-8 py-4 text-lg shadow-lg"
+            onClick={() => (window.location.href = "/branches")}
+          >
+            Explore Branches
+          </Button>
+        ) : (
+          <Button
+            rounded
+            color="blue"
+            className="mt-8 px-8 py-4 text-lg shadow-lg"
+            onClick={() => (window.location.href = "/register-donor")}
+          >
+            Register As Donor
+          </Button>
+        )}
       </div>
+    </section>
+  );
+};
 
-      <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
-        Support Students Across Pakistan
-      </h1>
-
-      <p className="text-lg mt-4 max-w-2xl mx-auto text-blue-100">
-        Agosh connects generous donors with deserving students. Donate
-        externally and upload proof of your donation to make a real impact in
-        education.
-      </p>
-
-      <Button
-        rounded
-        color="blue"
-        className="mt-8 px-8 py-4 text-lg shadow-lg"
-        onClick={() => (window.location.href = "/register-donor")}
-      >
-        Register As Donor
-      </Button>
-    </div>
-  </section>
-);
 
 // FEATURES SECTION
 const FeaturesSection = () => {
@@ -152,6 +168,8 @@ const CTASection = () => (
 // ---------------------- MAIN PAGE ----------------------
 
 const LandingPage = () => {
+
+
   return (
     <div className="w-full overflow-hidden">
       <Navbar />
