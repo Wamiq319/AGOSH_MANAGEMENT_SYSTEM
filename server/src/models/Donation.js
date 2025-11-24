@@ -11,7 +11,12 @@ const donationSchema = new mongoose.Schema(
     branch: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Branch",
-      required: true,
+    },
+
+    student: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
     },
 
     amount: {
@@ -34,8 +39,24 @@ const donationSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    category: {
+      type: String,
+      enum: ["GENERAL", "SPECIFIC_STUDENT"],
+      default: "GENERAL",
+    },
   },
   { timestamps: true }
 );
+
+// Pre-save hook to auto-set category
+donationSchema.pre("save", function (next) {
+  if (this.student) {
+    this.category = "SPECIFIC_STUDENT";
+  } else {
+    this.category = "GENERAL";
+  }
+  next();
+});
 
 export default mongoose.model("Donation", donationSchema);

@@ -25,10 +25,14 @@ const InfoItem = ({ icon, label, value, colorClass = "text-gray-700" }) => {
   const Component = icon;
   return (
     <div className="flex items-start p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
-      {Component ? <Component className={`mt-1 mr-3 text-xl ${colorClass}`} /> : null}
+      {Component ? (
+        <Component className={`mt-1 mr-3 text-xl ${colorClass}`} />
+      ) : null}
       <div>
         <p className="text-xs font-medium uppercase text-gray-500">{label}</p>
-        <p className="text-base font-semibold text-gray-800 break-all">{value || "N/A"}</p>
+        <p className="text-base font-semibold text-gray-800 break-all">
+          {value || "N/A"}
+        </p>
       </div>
     </div>
   );
@@ -37,7 +41,9 @@ const InfoItem = ({ icon, label, value, colorClass = "text-gray-700" }) => {
 // Main Section Card: Uses a light background and minimal styling for clarity
 const SectionCard = ({ children, className = "" }) => {
   return (
-    <div className={`p-6 bg-white rounded-xl shadow-lg border border-gray-100 ${className}`}>
+    <div
+      className={`p-6 bg-white rounded-xl shadow-lg border border-gray-100 ${className}`}
+    >
       {children}
     </div>
   );
@@ -54,7 +60,6 @@ const BranchDetailPage = () => {
   const students = data.students;
 
   console.log(data);
-  
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -92,6 +97,7 @@ const BranchDetailPage = () => {
       </div>
     );
   }
+  const { bankName, accountTitle, accountNumber } = branch.paymentInfo || {};
 
   const handleDirectDonate = () => {
     navigate("/donate", {
@@ -99,6 +105,9 @@ const BranchDetailPage = () => {
         branchId: branch._id,
         branchName: branch.name,
         donationType: "GENERAL",
+        bankName,
+        accountTitle,
+        accountNumber,
       },
     });
   };
@@ -110,18 +119,18 @@ const BranchDetailPage = () => {
         branchName: branch.name,
         studentId: studentId,
         studentName: studentName,
+        bankName,
+        accountTitle,
+        accountNumber,
         donationType: "SPECIFIC_STUDENT",
       },
     });
   };
 
-  const { bankName, accountTitle, accountNumber } = branch.paymentInfo || {};  
-
   return (
     <>
       <Navbar />
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 min-h-screen bg-gray-50">
-        
         {/* -------------------- Branch Information Header -------------------- */}
         <div className="bg-white p-6 rounded-xl shadow-md border-b-4 border-orange-600 mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 flex items-center mb-1">
@@ -135,63 +144,64 @@ const BranchDetailPage = () => {
 
         {/* -------------------- Key Branch Details (Professional Cards) -------------------- */}
         <h2 className="text-2xl font-bold text-gray-700 mb-4 flex items-center">
-            <FaUserTie className="mr-2 text-indigo-600" /> Key Information
+          <FaUserTie className="mr-2 text-indigo-600" /> Key Information
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-            <InfoItem 
-                icon={FaMapMarkerAlt} 
-                label="Location" 
-                value={branch.location} 
-                colorClass="text-red-500" // Location usually uses Red for Maps/Pins
-            />
-            <InfoItem 
-                icon={FaPhone} 
-                label="Phone Number" 
-                value={branch.phoneNumber} 
-                colorClass="text-green-600" // Phone usually uses Green
-            />
-            <InfoItem 
-                icon={FaUserTie} 
-                label="Admin" 
-                value={branch.admin?.name || "N/A"} 
-                colorClass="text-indigo-600" // Secondary accent color
-            />
-            <InfoItem 
-                icon={FaChild} 
-                label="Total Students" 
-                value={students?.length || 0} 
-                colorClass="text-orange-600" // Primary color for key metrics
-            />
+          <InfoItem
+            icon={FaMapMarkerAlt}
+            label="Location"
+            value={branch.location}
+            colorClass="text-red-500" // Location usually uses Red for Maps/Pins
+          />
+          <InfoItem
+            icon={FaPhone}
+            label="Phone Number"
+            value={branch.phoneNumber}
+            colorClass="text-green-600" // Phone usually uses Green
+          />
+          <InfoItem
+            icon={FaUserTie}
+            label="Admin"
+            value={branch.admin?.name || "N/A"}
+            colorClass="text-indigo-600" // Secondary accent color
+          />
+          <InfoItem
+            icon={FaChild}
+            label="Total Students"
+            value={students?.length || 0}
+            colorClass="text-orange-600" // Primary color for key metrics
+          />
         </div>
-
 
         {/* -------------------- Payment & Direct Donate Section (Orange Highlight) -------------------- */}
         <SectionCard className="mb-10 bg-orange-50 border-orange-200 border-t-4">
           <h2 className="text-2xl font-bold text-orange-700 flex items-center mb-4 pb-2 border-b border-orange-200">
-            <FaMoneyCheckAlt className="mr-3 text-orange-600" /> General Fund Donation
+            <FaMoneyCheckAlt className="mr-3 text-orange-600" /> General Fund
+            Donation
           </h2>
           <p className="mb-6 text-gray-700 text-sm">
-            Please use the following verified details for general operational donations for **{branch.name}**.
+            Please use the following verified details for general operational
+            donations for **{branch.name}**.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <InfoItem 
-                icon={FaUniversity} 
-                label="Bank / Service Name" 
-                value={bankName}
-                colorClass="text-orange-600"
+            <InfoItem
+              icon={FaUniversity}
+              label="Bank / Service Name"
+              value={bankName}
+              colorClass="text-orange-600"
             />
-            <InfoItem 
-                icon={FaCoins} 
-                label="Account Title" 
-                value={accountTitle}
-                colorClass="text-orange-600"
+            <InfoItem
+              icon={FaCoins}
+              label="Account Title"
+              value={accountTitle}
+              colorClass="text-orange-600"
             />
-            <InfoItem 
-                icon={FaQrcode} 
-                label="Account Number" 
-                value={accountNumber}
-                colorClass="text-orange-600"
+            <InfoItem
+              icon={FaQrcode}
+              label="Account Number"
+              value={accountNumber}
+              colorClass="text-orange-600"
             />
           </div>
 
@@ -206,10 +216,10 @@ const BranchDetailPage = () => {
           </Button>
         </SectionCard>
 
-
         {/* -------------------- Students Section (Indigo Accent) -------------------- */}
         <h2 className="text-2xl font-bold text-gray-700 flex items-center mb-6 pb-2 border-b border-gray-300">
-          <FaChild className="mr-2 text-indigo-600" /> Students Available for Sponsorship
+          <FaChild className="mr-2 text-indigo-600" /> Students Available for
+          Sponsorship
         </h2>
 
         {students?.length > 0 ? (
@@ -223,7 +233,7 @@ const BranchDetailPage = () => {
                 <div className="w-16 h-16 bg-indigo-50 rounded-full mb-3 flex items-center justify-center text-indigo-600 text-2xl font-bold border border-indigo-200">
                   {student.name ? student.name.charAt(0) : "S"}
                 </div>
-                
+
                 <h3 className="text-md font-semibold text-gray-800 line-clamp-1 mb-1">
                   {student.name || `Student #${student._id.slice(-4)}`}
                 </h3>
@@ -236,7 +246,7 @@ const BranchDetailPage = () => {
                   onClick={() =>
                     handleSponsorStudent(student._id, student.name)
                   }
-                  variant="filled" 
+                  variant="filled"
                   // Custom class for Indigo button (Assuming Button component supports custom Tailwind classes)
                   className="mt-2 flex items-center gap-1 text-xs py-2 px-3 w-full justify-center bg-indigo-600 hover:bg-indigo-700 text-white"
                 >

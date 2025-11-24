@@ -90,6 +90,7 @@ export const DonationManagementPage = () => {
         notes: formData.notes || "",
         donor: user._id, // Add donor id to the body
       };
+      console.log(body);
 
       if (formMode === "add") {
         result = await dispatch(

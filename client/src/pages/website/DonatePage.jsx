@@ -10,13 +10,12 @@ import {
   FaMoneyBillWave,
   FaCloudUploadAlt,
   FaCheckCircle,
-  FaExclamationTriangle,
   FaUniversity,
   FaQrcode,
   FaDollarSign,
-  FaCoins, // Using FaCoins for Account Title
+  FaCoins,
 } from "react-icons/fa";
-import { Button, Toast, Navbar, Footer } from "@/components";
+import { Button, Toast, Navbar, Footer, FormModal } from "@/components";
 
 // Helper Component for Payment Info Cards
 const PaymentInfoCard = ({ icon, label, value, valueClass = "" }) => {
@@ -38,21 +37,17 @@ const DonatePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // State jo Explore Page se pass hua tha
   const { branchId, branchName, studentId, studentName, donationType } =
     location.state || {};
 
-  // Local Form State
-  const [amount, setAmount] = useState("");
-  const [receiptFile, setReceiptFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState(null);
-
-  // State for fetching Branch Payment Info
   const [branchPaymentInfo, setBranchPaymentInfo] = useState(null);
   const [isPaymentInfoLoading, setIsPaymentInfoLoading] = useState(true);
 
-  // Redirect agar required data nahi hai
+  console.log(donationType);
+  
+  // Fetch branch payment info
   useEffect(() => {
     if (!branchId) {
       setToast({ message: "Error: Donation target not set.", type: "error" });
@@ -60,11 +55,11 @@ const DonatePage = () => {
       return;
     }
 
-    // Fetch Branch details to display its Payment Info
     dispatch(fetchResourceById({ resource: "branches", id: branchId }))
       .then((result) => {
-        if (result.payload && result.payload.paymentInfo) {
-          setBranchPaymentInfo(result.payload.paymentInfo);
+        const payloadData = result.payload.data;
+        if (payloadData && payloadData.paymentInfo) {
+          setBranchPaymentInfo(payloadData.paymentInfo);
         } else {
           setToast({
             message: "Could not load payment details for the branch.",
@@ -72,52 +67,51 @@ const DonatePage = () => {
           });
         }
       })
-      .catch(() => {
-        setToast({ message: "Failed to fetch branch details.", type: "error" });
-      })
-      .finally(() => {
-        setIsPaymentInfoLoading(false);
-      });
+      .catch(() =>
+        setToast({ message: "Failed to fetch branch details.", type: "error" })
+      )
+      .finally(() => setIsPaymentInfoLoading(false));
   }, [dispatch, branchId, navigate]);
 
-  // Form Submission Handler (Logic remains the same)
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (amount <= 0 || !receiptFile) {
+  // Form submission handler
+  const handleFormSubmit = async (formData) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      setToast({ message: "Please login to continue.", type: "error" });
+      return;
+    }
+
+    if (!formData.amount || formData.amount <= 0 || !formData.receiptImage) {
       setToast({
-        message: "Please enter a valid amount and upload a receipt.",
+        message: "Please enter amount and upload receipt.",
         type: "warning",
       });
       return;
     }
 
     setIsSubmitting(true);
-
-    const uploadedFileUrl =
-      "https://your-server.com/receipts/" + receiptFile.name;
+    setToast(null);
 
     const body = {
-      amount: Number(amount),
-      receiptImage: uploadedFileUrl,
-      donor: "USER_ID_FROM_SESSION",
-      branch: branchId,
-      category: donationType,
-      ...(studentId && { studentRecipient: studentId }),
+      donor: user._id,
+      branch: branchId || formData.branch,
+      amount: Number(formData.amount),
+      studentId: donationType === "SPECIFIC_STUDENT" ? studentId : null,
+      receiptImage: formData.receiptImage,
+      notes: formData.notes || "",
+      ...(donationType === "SPECIFIC_STUDENT" &&
+        studentId && { student: studentId }),
     };
 
     try {
       const result = await dispatch(
-        createResource({ resource: "donations", body: body })
+        createResource({ resource: "donations/create", body })
       );
-
       if (result.meta.requestStatus === "fulfilled") {
         setToast({
-          message: "Donation submitted! Awaiting Admin verification.",
+          message: "Donation submitted successfully!",
           type: "success",
         });
-        setAmount("");
-        setReceiptFile(null);
-        navigate("/donation-success", { replace: true });
       } else {
         setToast({
           message: result.payload || "Failed to submit donation.",
@@ -125,21 +119,39 @@ const DonatePage = () => {
         });
       }
     } catch (error) {
+      console.error(error);
       setToast({ message: "An unexpected error occurred.", type: "error" });
-      console.log(error);
-      
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // UI Content for the target
+  // Define Form Fields
+  const getFormFields = () => [
+    {
+      label: "Donated Amount (PKR)",
+      name: "amount",
+      type: "number",
+      required: true,
+      icon: FaDollarSign,
+      placeholder: "Enter the exact amount transferred",
+    },
+    {
+      label: "Notes",
+      name: "notes",
+      type: "textarea",
+      rows: 1,
+      required: false,
+      placeholder: "A special request or acknowledgement.",
+    },
+    { label: "Receipt", name: "receiptImage", type: "image", required: true },
+  ];
+
   const donationTargetText =
     donationType === "SPECIFIC_STUDENT"
       ? `You are sponsoring: ${studentName}`
       : `General Fund for: ${branchName}`;
 
-  // Loading State
   if (isPaymentInfoLoading) {
     return (
       <div className="flex justify-center items-center h-96 bg-gray-50">
@@ -150,11 +162,10 @@ const DonatePage = () => {
     );
   }
 
-  // Main UI
   return (
     <>
       <Navbar />
-      <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 min-h-screen bg-gray-50">
+      <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 min-h-screen">
         {toast && (
           <Toast
             message={toast.message}
@@ -175,7 +186,7 @@ const DonatePage = () => {
         </div>
 
         <div className="bg-white p-8 rounded-xl shadow-2xl border-t-4 border-orange-600">
-          {/* Donation Target Context - Highlighted */}
+          {/* Donation Target */}
           <div
             className={`p-4 mb-8 rounded-lg border-l-4 ${
               donationType === "SPECIFIC_STUDENT"
@@ -192,7 +203,7 @@ const DonatePage = () => {
             </p>
           </div>
 
-          {/* ------------------- 1. Payment Instructions Section ------------------- */}
+          {/* Payment Instructions */}
           <h2 className="text-2xl font-bold text-gray-700 flex items-center mb-4 pb-2 border-b border-gray-200">
             <FaMoneyBillWave className="mr-3 text-indigo-600" /> 1. Make Your
             Payment
@@ -203,19 +214,16 @@ const DonatePage = () => {
           </p>
 
           <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
-            {/* Payment Details Card 1: Bank Name */}
             <PaymentInfoCard
               icon={FaUniversity}
               label="Bank / Service Name"
               value={branchPaymentInfo?.bankName}
             />
-            {/* Payment Details Card 2: Account Title */}
             <PaymentInfoCard
               icon={FaCoins}
               label="Account Title"
               value={branchPaymentInfo?.accountTitle}
             />
-            {/* Payment Details Card 3: Account Number - Highlighted Orange */}
             <PaymentInfoCard
               icon={FaQrcode}
               label="Account Number"
@@ -224,80 +232,33 @@ const DonatePage = () => {
             />
           </div>
 
-          {/* ------------------- 2. Submission Form ------------------- */}
-          <form onSubmit={handleSubmit}>
-            <h2 className="text-2xl font-bold text-gray-700 flex items-center mb-4 pb-2 border-b border-gray-200">
-              <FaCloudUploadAlt className="mr-3 text-indigo-600" /> 2. Upload
-              Proof
-            </h2>
+          {/* FormModal for Donation */}
+          <h2 className="text-2xl font-bold text-gray-700 flex items-center mb-4 pb-2 border-b border-gray-200">
+            <FaCloudUploadAlt className="mr-3 text-indigo-600" /> 2. Upload
+            Proof
+          </h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Please fill in the exact amount you transferred and upload the
+            payment receipt to finalize your donation.
+          </p>
 
-            {/* Amount Input */}
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 font-medium mb-2"
-                htmlFor="amount"
-              >
-                <FaDollarSign className="inline mr-1 text-orange-600" /> Donated
-                Amount (PKR)
-              </label>
-              <input
-                type="number"
-                id="amount"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                required
-                min="1"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-lg"
-                placeholder="Enter the exact amount transferred"
-              />
-            </div>
-
-            {/* Receipt Upload Input */}
-            <div className="mb-6">
-              <label
-                className="block text-gray-700 font-medium mb-2"
-                htmlFor="receipt"
-              >
-                <FaCloudUploadAlt className="inline mr-1 text-orange-600" />{" "}
-                Upload Payment Receipt/Screenshot
-              </label>
-              <input
-                type="file"
-                id="receipt"
-                onChange={(e) => setReceiptFile(e.target.files[0])}
-                required
-                accept="image/*, application/pdf"
-                // Custom File Input Styling for Orange
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-100 file:text-orange-700 hover:file:bg-orange-200"
-              />
-              {receiptFile && (
-                <p className="mt-2 text-sm text-gray-500 flex items-center">
-                  <FaCheckCircle className="mr-1 text-green-500" /> File
-                  selected: **{receiptFile.name}**
-                </p>
-              )}
-            </div>
-
-            {/* Submit Button - Primary Action (Orange) */}
+          <FormModal
+            isSubmitting={isSubmitting}
+            fields={getFormFields()}
+            onSubmit={handleFormSubmit}
+          >
             <Button
               type="submit"
               variant="filled"
-              color="orange" // Custom class for Orange button
-              isLoading={isSubmitting}
-              disabled={isSubmitting || isPaymentInfoLoading}
-              className="w-full py-3 text-lg flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 text-white"
+              color="orange"
+              className="flex items-center gap-2 justify-center w-full px-6 py-3 text-lg bg-orange-600 hover:bg-orange-700 text-white"
+              disabled={isSubmitting}
             >
               {isSubmitting
                 ? "Submitting..."
                 : "Confirm Donation & Upload Proof"}
             </Button>
-
-            {/* Warning Message */}
-            <p className="text-center text-sm mt-3 text-red-600 flex items-center justify-center font-medium">
-              <FaExclamationTriangle className="mr-1" /> Your donation will be
-              marked as PENDING until verified by the Admin.
-            </p>
-          </form>
+          </FormModal>
         </div>
       </div>
       <Footer />

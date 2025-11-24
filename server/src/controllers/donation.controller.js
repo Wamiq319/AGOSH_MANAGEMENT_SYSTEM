@@ -1,5 +1,5 @@
 import * as donationService from "../services/index.js";
-import { sendResponse, uploadOnCloudinary } from "../utils/index.js";
+import { sendResponse, uploadToCloudinary,  } from "../utils/index.js";
 
 //
 // ------------------------- CONTROLLER FUNCTIONS -------------------------
@@ -7,26 +7,28 @@ import { sendResponse, uploadOnCloudinary } from "../utils/index.js";
 
 export const createDonation = async (req, res) => {
   console.log("Request Body:", req.body);
-  console.log("Request File:", req.file);
 
   try {
     const data = {
       donor: req.body.donor,
       branch: req.body.branch,
       amount: req.body.amount,
+      student: req.body.student || null,
       notes: req.body.notes || "",
     };
 
-    if (req.file) {
-      const receiptImage = await uploadOnCloudinary(req.file.path);
-      if (!receiptImage) {
+    if (req.body.receiptImage) {
+      const { url } = await uploadToCloudinary(req.body.receiptImage);
+      console.log(url);
+      
+      if (!url) {
         return sendResponse(
           res,
           { success: false, message: "Failed to upload receipt image." },
           400
         );
       }
-      data.receiptImage = receiptImage.secure_url;
+      data.receiptImage = url;
     } else {
       return sendResponse(
         res,
@@ -57,12 +59,11 @@ export const createDonation = async (req, res) => {
 
 export const updateDonation = async (req, res) => {
   console.log("Update Request Body:", req.body);
-  console.log("Update Request File:", req.file);
 
   try {
     const updateData = { ...req.body };
-    if (req.file) {
-      const receiptImage = await uploadOnCloudinary(req.file.path);
+    if (req.body.receiptImage) {
+      const receiptImage = await uploadToCloudinary(rreq.body.receiptImage);
       if (!receiptImage) {
         return sendResponse(
           res,

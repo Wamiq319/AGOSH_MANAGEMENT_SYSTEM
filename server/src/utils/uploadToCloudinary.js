@@ -1,5 +1,4 @@
 import { v2 as cloudinary } from "cloudinary";
-import fs from "fs";
 
 let isCloudinaryConfigured = false;
 
@@ -14,20 +13,22 @@ const configureCloudinary = () => {
   }
 };
 
-const uploadOnCloudinary = async (localFilePath) => {
-  configureCloudinary();
+const uploadToCloudinary = async (file, folder = "agosh_management_system") => {
   try {
-    if (!localFilePath) return null;
-    const response = await cloudinary.uploader.upload(localFilePath, {
+    configureCloudinary();
+
+    const result = await cloudinary.uploader.upload(file, {
+      folder,
       resource_type: "auto",
     });
-    fs.unlinkSync(localFilePath);
-    return response;
+
+    return {
+      url: result.secure_url,
+      public_id: result.public_id,
+    };
   } catch (error) {
-    console.error("Cloudinary upload error:", error);
-    fs.unlinkSync(localFilePath);
-    return null;
+    throw new Error(error.message || "Cloudinary upload failed");
   }
 };
 
-export { uploadOnCloudinary };
+export { uploadToCloudinary };

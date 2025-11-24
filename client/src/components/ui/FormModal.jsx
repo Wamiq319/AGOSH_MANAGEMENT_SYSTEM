@@ -73,18 +73,15 @@ const FormModal = ({
 
       case "image":
         return (
-          <ImageInput
-            {...props}
-            onChange={handleChange}
-            initialValue={value}
-          />
+          <ImageInput {...props} onChange={handleChange} initialValue={value} />
         );
-      
+
       case "textarea":
         return (
           <TextArea
             {...props}
             value={value}
+            rows={props.rows || 6}
             onChange={handleChange}
           />
         );

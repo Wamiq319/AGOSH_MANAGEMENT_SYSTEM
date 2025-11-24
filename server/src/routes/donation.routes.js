@@ -5,18 +5,10 @@ import { upload } from "../middelwares/upload.js";
 const router = Router();
 
 // CREATE Donation (Donor)
-router.post(
-  "/create",
-  upload.single("receiptImage"),
-  donationController.createDonation
-);
+router.post("/create", donationController.createDonation);
 
 // UPDATE Donation (Admin / Branch Admin)
-router.put(
-  "/:id",
-  upload.single("receiptImage"),
-  donationController.updateDonation
-);
+router.put("/:id", donationController.updateDonation);
 
 // DELETE Donation (Head Office Admin)
 router.delete("/:id", donationController.deleteDonation);

@@ -27,7 +27,10 @@ const ImageInput = ({
     if (!file) return;
     const base64 = await convertToBase64(file);
     setPreview(base64);
-    onChange(e);
+
+    if (onChange) {
+      onChange({ target: { name, value: base64 } });
+    }
   };
 
   const handleRemoveImage = () => {
