@@ -21,15 +21,11 @@ export const DonorDashboard = () => {
         }
 
         const response = await fetch(`${API_URL}/api/dashboard/donor`, {
-          headers: {
-            "x-user-id": user._id,
-          },
+          headers: { "x-user-id": user._id },
         });
 
         const result = await response.json();
-        if (!result.success) {
-          throw new Error(result.message || "Failed to fetch data");
-        }
+        if (!result.success) throw new Error(result.message || "Failed to fetch data");
         setDashboardData(result.data);
         setError(null);
       } catch (err) {
@@ -39,7 +35,6 @@ export const DonorDashboard = () => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
@@ -50,6 +45,7 @@ export const DonorDashboard = () => {
         <span className="ml-3 text-gray-600">Loading dashboard...</span>
       </div>
     );
+
   if (error)
     return (
       <div className="text-center text-red-500 mt-10">
@@ -57,10 +53,19 @@ export const DonorDashboard = () => {
       </div>
     );
 
+  // Format amount in PKR
+  const formatPKR = (amount) => {
+    if (!amount) return "PKR 0";
+    if (amount >= 1_000_000_000) return `PKR ${(amount / 1_000_000_000).toFixed(1)}B`;
+    if (amount >= 1_000_000) return `PKR ${(amount / 1_000_000).toFixed(1)}M`;
+    if (amount >= 1_000) return `PKR ${(amount / 1_000).toFixed(1)}k`;
+    return `PKR ${amount}`;
+  };
+
   const stats = [
     {
       title: "Total Donations",
-      value: `$${dashboardData?.totalDonations?.toLocaleString()}`,
+      value: formatPKR(dashboardData?.totalDonations),
       color: "from-yellow-400 to-orange-500",
       icon: <DollarSign className="w-8 h-8" />,
     },
@@ -73,13 +78,13 @@ export const DonorDashboard = () => {
       </h1>
 
       {/* Stat Cards */}
-      <div className="flex justify-center mb-10">
+      <div className="flex justify-center mb-10 gap-6">
         {stats.map((item) => (
           <div
             key={item.title}
             className={`w-64 h-64 relative rounded-2xl bg-gradient-to-br ${item.color}
-          shadow-md text-white p-6 flex flex-col justify-between
-          transition-all duration-300 hover:scale-105 hover:shadow-xl`}
+            shadow-lg text-white p-6 flex flex-col justify-between
+            transition-transform hover:scale-105 hover:shadow-2xl`}
           >
             <div className="flex items-center justify-between">
               <h2 className="uppercase tracking-wide opacity-90 font-semibold">
@@ -88,9 +93,7 @@ export const DonorDashboard = () => {
               <div className="bg-white/20 p-3 rounded-xl">{item.icon}</div>
             </div>
             <div className="flex flex-col justify-center items-center flex-1">
-              <p className="text-5xl font-extrabold drop-shadow-lg">
-                {item.value}
-              </p>
+              <p className="text-5xl font-extrabold drop-shadow-lg">{item.value}</p>
             </div>
             <div className="absolute bottom-0 left-0 w-full h-1 bg-white/30 rounded-full" />
           </div>
@@ -98,27 +101,27 @@ export const DonorDashboard = () => {
       </div>
 
       {/* Recent Donations */}
-      <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+      <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
         <h2 className="text-xl font-semibold mb-4 text-gray-700">
           Recent Donations
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b">
-                <th className="p-3">Branch</th>
-                <th className="p-3">Amount</th>
-                <th className="p-3">Date</th>
+              <tr className="border-b bg-gray-50">
+                <th className="p-3 font-medium text-gray-600">Branch</th>
+                <th className="p-3 font-medium text-gray-600">Amount</th>
+                <th className="p-3 font-medium text-gray-600">Date</th>
               </tr>
             </thead>
             <tbody>
               {dashboardData?.recentDonations?.map((donation) => (
-                <tr key={donation._id} className="border-b hover:bg-gray-50">
+                <tr key={donation._id} className="border-b hover:bg-gray-50 transition-all">
                   <td className="p-3">{donation.branch?.name || "N/A"}</td>
-                  <td className="p-3">${donation.amount.toLocaleString()}</td>
-                  <td className="p-3">
-                    {new Date(donation.createdAt).toLocaleDateString()}
+                  <td className="p-3 font-semibold text-green-700">
+                    {formatPKR(donation.amount)}
                   </td>
+                  <td className="p-3">{new Date(donation.createdAt).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>
