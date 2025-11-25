@@ -15,8 +15,7 @@ const donationSchema = new mongoose.Schema(
 
     student: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
+      ref: "Student",
     },
 
     amount: {

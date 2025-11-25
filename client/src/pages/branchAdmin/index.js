@@ -1,3 +1,4 @@
-export { BranchAdminDashboard } from "./branchAdminDashboard";
+export { default as BranchAdminDashboard } from "./branchAdminDashboard";
 export { StudentManagementPage } from "./StudentMangament";
 export { default as BranchAdminLayout } from "./AdminLayout";
+export { default as BranchDonationsPage } from "./BranchDonationsPage";

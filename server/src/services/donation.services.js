@@ -89,7 +89,8 @@ export const getDonationsByBranch = async (branchId) => {
     branch: new mongoose.Types.ObjectId(branchId),
   })
     .sort({ createdAt: -1 })
-    .populate("donor", "name email");
+    .populate("donor", "name email")
+    .populate("student");
 
   return {
     status: "SUCCESS",

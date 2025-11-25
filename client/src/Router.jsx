@@ -17,7 +17,8 @@ import {
   StudentsManagementPage,
   DonorExploreBranchesPage,
   BranchDetailPage,
-  DonatePage
+  DonatePage,
+  BranchDonationsPage
 } from "@/pages";
 
 const AppRouter = () => {
@@ -43,8 +44,8 @@ const AppRouter = () => {
         {/* Branch Admin Routes */}
         <Route path="/branch-admin" element={<BranchAdminLayout />}>
           <Route index element={<BranchAdminDashboard />} />
-
           <Route path="students" element={<StudentManagementPage />} />
+          <Route path="donations" element={<BranchDonationsPage/>}/>
         </Route>
 
         {/* Donor Routes */}

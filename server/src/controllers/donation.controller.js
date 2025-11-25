@@ -1,5 +1,5 @@
 import * as donationService from "../services/index.js";
-import { sendResponse, uploadToCloudinary,  } from "../utils/index.js";
+import { sendResponse, uploadToCloudinary } from "../utils/index.js";
 
 //
 // ------------------------- CONTROLLER FUNCTIONS -------------------------
@@ -13,14 +13,15 @@ export const createDonation = async (req, res) => {
       donor: req.body.donor,
       branch: req.body.branch,
       amount: req.body.amount,
-      student: req.body.student || null,
+      student: req.body.student,
+
       notes: req.body.notes || "",
     };
 
     if (req.body.receiptImage) {
       const { url } = await uploadToCloudinary(req.body.receiptImage);
       console.log(url);
-      
+
       if (!url) {
         return sendResponse(
           res,
