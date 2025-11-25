@@ -52,7 +52,6 @@ const HeroSection = () => {
   );
 };
 
-
 // FEATURES SECTION
 const FeaturesSection = () => {
   const features = [
@@ -158,9 +157,9 @@ const CTASection = () => (
       rounded
       color="gold"
       className="mt-8 text-lg px-8 py-4"
-      onClick={() => (window.location.href = "/register-donor")}
+      onClick={() => (window.location.href = "/branches")}
     >
-      Upload Donation Proof
+      Support Students
     </Button>
   </section>
 );
@@ -168,8 +167,6 @@ const CTASection = () => (
 // ---------------------- MAIN PAGE ----------------------
 
 const LandingPage = () => {
-
-
   return (
     <div className="w-full overflow-hidden">
       <Navbar />
