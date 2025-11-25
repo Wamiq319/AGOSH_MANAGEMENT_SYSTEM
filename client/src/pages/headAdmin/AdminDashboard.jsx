@@ -67,33 +67,40 @@ export const AdminDashboard = () => {
         Failed to load data: {error}
       </div>
     );
+// Currency formatter
+const formatCurrency = (num) => {
+  if (num >= 1_000_000_000) return `Rs ${(num / 1_000_000_000).toFixed(1)}B`;
+  if (num >= 1_000_000) return `Rs ${(num / 1_000_000).toFixed(1)}M`;
+  if (num >= 1_000) return `Rs ${(num / 1_000).toFixed(1)}k`;
+  return `Rs ${num}`;
+};
 
-  const stats = [
-    {
-      title: "Total Students",
-      value: dashboardData?.totalStudents || 0,
-      color: "from-blue-500 to-blue-700",
-      icon: <GraduationCap className="w-8 h-8" />,
-    },
-    {
-      title: "Total Users",
-      value: dashboardData?.totalUsers || 0,
-      color: "from-orange-500 to-orange-700",
-      icon: <Users className="w-8 h-8" />,
-    },
-    {
-      title: "Total Branches",
-      value: dashboardData?.totalBranches || 0,
-      color: "from-blue-400 to-orange-400",
-      icon: <Building className="w-8 h-8" />,
-    },
-    {
-      title: "Total Donations",
-      value: `$${dashboardData?.totalDonations?.toLocaleString() || 0}`,
-      color: "from-orange-400 to-blue-500",
-      icon: <DollarSign className="w-8 h-8" />,
-    },
-  ];
+const stats = [
+  {
+    title: "Total Students",
+    value: dashboardData?.totalStudents || 0,
+    color: "from-blue-500 to-blue-700",
+    icon: <GraduationCap className="w-8 h-8" />,
+  },
+  {
+    title: "Total Users",
+    value: dashboardData?.totalUsers || 0,
+    color: "from-orange-500 to-orange-700",
+    icon: <Users className="w-8 h-8" />,
+  },
+  {
+    title: "Total Branches",
+    value: dashboardData?.totalBranches || 0,
+    color: "from-blue-400 to-orange-400",
+    icon: <Building className="w-8 h-8" />,
+  },
+  {
+    title: "Total Donations",
+    value: formatCurrency(dashboardData?.totalDonations || 0),
+    color: "from-orange-400 to-blue-500",
+    icon: <DollarSign className="w-8 h-8" />,
+  },
+];
 
   const monthlyData = Array.from({ length: 12 }, (_, i) => ({
     month: new Date(0, i).toLocaleString("default", { month: "short" }),

@@ -10,13 +10,14 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <h3 className="text-2xl font-bold text-yellow-400">
-              Scholarship Zone
+              Agosh Care Center
             </h3>
             <p className="mt-3 text-gray-300 text-sm leading-relaxed">
-              A centralized digital platform to apply, manage, and track
-              scholarships with{" "}
-              <span className="font-semibold">transparency</span> and{" "}
-              <span className="font-semibold">ease</span>.
+              Empowering communities through{" "}
+              <span className="font-semibold">education</span>,
+              <span className="font-semibold">support</span>, and
+              <span className="font-semibold">social initiatives</span> for a
+              brighter future.
             </p>
           </div>
 
@@ -33,22 +34,15 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/scholarships"
+                  to="/branches"
                   className="hover:text-yellow-400 transition"
                 >
-                  Scholarships
+                  Branches
                 </Link>
               </li>
+
               <li>
-                <Link to="/about" className="hover:text-yellow-400 transition">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/contact"
-                  className="hover:text-yellow-400 transition"
-                >
+                <Link to="#" className="hover:text-yellow-400 transition">
                   Contact
                 </Link>
               </li>
@@ -60,7 +54,7 @@ const Footer = () => {
             <h4 className="text-lg font-semibold mb-3 text-yellow-400">
               Contact
             </h4>
-            <p className="text-gray-300 text-sm">support@scholarshipzone.com</p>
+            <p className="text-gray-300 text-sm">support@agoschcare.org</p>
             <p className="text-gray-300 text-sm">+92 300 1234567</p>
             <p className="text-gray-300 text-sm">Islamabad, Pakistan</p>
 
@@ -84,7 +78,7 @@ const Footer = () => {
           <p>
             &copy; {new Date().getFullYear()}{" "}
             <span className="text-yellow-400 font-semibold">
-              Scholarship Zone
+              Agosh Care Center
             </span>
             . All rights reserved.
           </p>
