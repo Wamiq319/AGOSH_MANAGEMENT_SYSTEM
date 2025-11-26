@@ -22,7 +22,6 @@ const DonorManagementPage = () => {
     dispatch(fetchResources({ resource: "users" }));
   }, [dispatch]);
 
-console.log(data);
 
 
   const donorList = data.users?.filter((u) => u.role === "DONOR") || [];
@@ -127,7 +126,7 @@ console.log(data);
         onConfirm={confirmDelete}
         message="Are you sure you want to delete this donor?"
       />
-
+ 
       <Modal
         isOpen={isViewOpen}
         onClose={() => setIsViewOpen(false)}

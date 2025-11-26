@@ -17,6 +17,11 @@ export const SidebarMenus = {
       Icon: Users,
       path: "/admin/donors",
     },
+     {
+      label: "Donations",
+      Icon: DollarSign,
+      path: "/admin/donations",
+    },
     {
       label: "Students Management",
       Icon: Users,

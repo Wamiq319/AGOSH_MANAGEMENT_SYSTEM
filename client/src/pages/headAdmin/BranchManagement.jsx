@@ -26,7 +26,7 @@ import {
   FaEnvelope,
   FaShieldAlt,
   FaCalendarAlt,
-  FaMoneyCheckAlt, 
+  FaMoneyCheckAlt,
 } from "react-icons/fa";
 
 export const BranchesManagementPage = () => {
@@ -323,120 +323,172 @@ export const BranchesManagementPage = () => {
         </div>
       )}
 
-      {/* View Modal */}
       <Modal
         isOpen={!!selectedBranch && !isFormOpen}
         onClose={() => setSelectedBranch(null)}
-        headerTitle="Branch Details"
+        headerTitle={
+          <span className="font-extrabold">
+            Branch:{" "}
+            <span className="text-blue-600">{selectedBranch?.name}</span>
+          </span>
+        }
         size="md"
+        showSecondaryActionButton={false}
+        showPrimaryActionButton={false}
       >
         {selectedBranch ? (
           <div className="space-y-6">
-            {/* Branch Details Section */}
-            <div>
-              <h3 className="text-lg font-semibold text-blue-700 border-b pb-2 mb-3 flex items-center">
-                <FaBuilding className="mr-2" /> Branch Information
+            {/* 1. BRANCH HEADER CARD  */}
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-orange-50 border border-orange-200 shadow-sm">
+              <div className="w-20 h-20 flex items-center justify-center rounded-full bg-orange-600 text-white text-3xl font-bold mb-3 border-4 border-orange-200">
+                <FaBuilding />
+              </div>
+              <h2 className="text-xl font-extrabold text-gray-800">
+                {selectedBranch.name}
+              </h2>
+              <p className="text-sm text-gray-600 mt-1 flex items-center">
+                <FaMapMarkerAlt className="mr-2 text-gray-500" />
+                {selectedBranch.location || "Location Not Provided"}
+              </p>
+            </div>
+
+            {/* 2. BRANCH DETAILS CARD*/}
+            <div className="bg-white p-5 rounded-xl border border-orange-100 shadow-xs space-y-3">
+              <h3 className="text-lg font-semibold border-b border-orange-300 pb-1 mb-3 text-gray-700">
+                <FaBuilding className="mr-2 text-blue-600 inline" /> Branch
+                Information
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div className="flex items-center">
-                  <FaBuilding className="text-gray-500 mr-3" />
-                  <strong className="mr-2">Name:</strong> {selectedBranch.name}
+
+              {/* Detail Item 1: Location */}
+              <div className="flex justify-between items-center py-1 border-b border-gray-100 last:border-b-0">
+                <div className="flex items-center text-gray-600">
+                  <span className="mr-3 text-lg text-red-500">
+                    <FaMapMarkerAlt />
+                  </span>
+                  <span className="font-medium">Location:</span>
                 </div>
-                <div className="flex items-center">
-                  <FaMapMarkerAlt className="text-gray-500 mr-3" />
-                  <strong className="mr-2">Location:</strong>{" "}
+                <span className="text-gray-700 text-right ml-4">
                   {selectedBranch.location}
+                </span>
+              </div>
+
+              {/* Detail Item 2: Phone Number */}
+              <div className="flex justify-between items-center py-1 border-b border-gray-100 last:border-b-0">
+                <div className="flex items-center text-gray-600">
+                  <span className="mr-3 text-lg text-green-500">
+                    <FaPhone />
+                  </span>
+                  <span className="font-medium">Phone Number:</span>
                 </div>
-                <div className="flex items-center col-span-2">
-                  <FaPhone className="text-gray-500 mr-3" />
-                  <strong className="mr-2">Phone:</strong>{" "}
+                <span className="text-gray-700 font-semibold text-right ml-4">
                   {selectedBranch.phoneNumber}
-                </div>
+                </span>
               </div>
             </div>
 
-            {/* Payment Details Section (New) */}
-            <div>
-              <h3 className="text-lg font-semibold text-green-700 border-b pb-2 mb-3 flex items-center">
-                <FaMoneyCheckAlt className="mr-2" /> Payment Information
+            {/* 3. PAYMENT DETAILS CARD */}
+            <div className="bg-white p-5 rounded-xl border border-orange-100 shadow-xs space-y-3">
+              <h3 className="text-lg font-semibold border-b border-orange-300 pb-1 mb-3 text-gray-700">
+                <FaMoneyCheckAlt className="mr-2 text-green-600 inline" />{" "}
+                Payment Information
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm bg-green-50 p-3 rounded-lg border border-green-100">
-                <div className="flex flex-col">
-                  <span className="text-gray-500 text-xs uppercase tracking-wider">
-                    Bank / Service
-                  </span>
-                  <span className="font-semibold text-gray-800">
+
+              <div className="bg-green-50 p-3 rounded-lg border border-green-100 space-y-3">
+                {/* Detail Item 1: Bank Name */}
+                <div className="flex justify-between items-center py-1 border-b border-green-100 last:border-b-0">
+                  <div className="flex items-center text-gray-600">
+                    <span className="mr-3 text-lg text-green-700">
+                      <FaMoneyCheckAlt />
+                    </span>
+                    <span className="font-medium">Bank / Service:</span>
+                  </div>
+                  <span className="text-gray-800 text-right font-semibold ml-4">
                     {selectedBranch.paymentInfo?.bankName || "N/A"}
                   </span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-gray-500 text-xs uppercase tracking-wider">
-                    Account Title
-                  </span>
-                  <span className="font-semibold text-gray-800">
+
+                {/* Detail Item 2: Account Title */}
+                <div className="flex justify-between items-center py-1 border-b border-green-100 last:border-b-0">
+                  <div className="flex items-center text-gray-600">
+                    <span className="mr-3 text-lg text-green-700">
+                      <FaUserTie />
+                    </span>
+                    <span className="font-medium">Account Title:</span>
+                  </div>
+                  <span className="text-gray-800 text-right font-semibold ml-4">
                     {selectedBranch.paymentInfo?.accountTitle || "N/A"}
                   </span>
                 </div>
-                <div className="flex flex-col col-span-2">
-                  <span className="text-gray-500 text-xs uppercase tracking-wider">
-                    Account Number
-                  </span>
-                  <span className="font-mono text-lg font-bold text-green-800">
+
+                {/* Detail Item 3: Account Number */}
+                <div className="flex justify-between items-center py-1 border-b border-green-100 last:border-b-0">
+                  <div className="flex items-center text-gray-600">
+                    <span className="mr-3 text-lg text-green-700">
+                      <FaShieldAlt />
+                    </span>
+                    <span className="font-medium">Account Number:</span>
+                  </div>
+                  <span className="font-mono text-base font-bold text-green-800 text-right ml-4">
                     {selectedBranch.paymentInfo?.accountNumber || "N/A"}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Admin Details Section */}
+            {/* 4. ADMIN DETAILS CARD */}
             {selectedBranch.admin && (
-              <div>
-                <h3 className="text-lg font-semibold text-blue-700 border-b pb-2 mb-3 flex items-center">
-                  <FaUserTie className="mr-2" /> Admin Information
+              <div className="bg-white p-5 rounded-xl border border-orange-100 shadow-xs space-y-3">
+                <h3 className="text-lg font-semibold border-b border-orange-300  pb-1 mb-3 text-gray-700">
+                  <FaUserTie className="mr-2 text-purple-600 inline" /> Admin
+                  Information
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                  <div className="flex items-center">
-                    <FaUserTie className="text-gray-500 mr-3" />
-                    <strong className="mr-2">Name:</strong>{" "}
+
+                {/* Detail Item 1: Admin Name */}
+                <div className="flex justify-between items-center py-1 border-b border-gray-100 last:border-b-0">
+                  <div className="flex items-center text-gray-600">
+                    <span className="mr-3 text-lg text-purple-500">
+                      <FaUserTie />
+                    </span>
+                    <span className="font-medium">Name:</span>
+                  </div>
+                  <span className="text-gray-700 text-right ml-4">
                     {selectedBranch.admin.name}
+                  </span>
+                </div>
+
+                {/* Detail Item 2: Admin Email */}
+                <div className="flex justify-between items-center py-1 border-b border-gray-100 last:border-b-0">
+                  <div className="flex items-center text-gray-600">
+                    <span className="mr-3 text-lg text-purple-500">
+                      <FaEnvelope />
+                    </span>
+                    <span className="font-medium">Email:</span>
                   </div>
-                  <div className="flex items-center">
-                    <FaEnvelope className="text-gray-500 mr-3" />
-                    <strong className="mr-2">Email:</strong>{" "}
+                  <span className="text-gray-700 text-right ml-4">
                     {selectedBranch.admin.email}
+                  </span>
+                </div>
+
+                {/* Detail Item 3: Admin Role */}
+                <div className="flex justify-between items-center py-1 border-b border-gray-100 last:border-b-0">
+                  <div className="flex items-center text-gray-600">
+                    <span className="mr-3 text-lg text-purple-500">
+                      <FaShieldAlt />
+                    </span>
+                    <span className="font-medium">Role:</span>
                   </div>
-                  <div className="flex items-center">
-                    <FaShieldAlt className="text-gray-500 mr-3" />
-                    <strong className="mr-2">Role:</strong>{" "}
+                  <span className="text-gray-700 text-right ml-4">
                     {selectedBranch.admin.role}
-                  </div>
+                  </span>
                 </div>
               </div>
             )}
-
-            {/* Timestamps */}
-            <div>
-              <h3 className="text-lg font-semibold text-blue-700 border-b pb-2 mb-3 flex items-center">
-                <FaCalendarAlt className="mr-2" /> System Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <p>
-                  <strong className="mr-2">Created:</strong>{" "}
-                  {new Date(selectedBranch.createdAt).toLocaleString()}
-                </p>
-                <p>
-                  <strong className="mr-2">Last Updated:</strong>{" "}
-                  {new Date(selectedBranch.updatedAt).toLocaleString()}
-                </p>
-              </div>
-            </div>
           </div>
         ) : (
           <p className="text-gray-400">Loading branch details...</p>
         )}
       </Modal>
-
-      {/* Form Modal (Add/Edit) */}
+      {/* Form Modal */}
       <Modal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}

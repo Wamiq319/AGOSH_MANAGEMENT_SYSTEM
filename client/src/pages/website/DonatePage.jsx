@@ -31,6 +31,7 @@ const DonatePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [allowed, setAllowed] = useState(null);
 
   const { branchId, branchName, studentId, studentName, donationType } =
     location.state || {};
@@ -39,6 +40,21 @@ const DonatePage = () => {
   const [toast, setToast] = useState(null);
   const [branchPaymentInfo, setBranchPaymentInfo] = useState(null);
   const [isPaymentInfoLoading, setIsPaymentInfoLoading] = useState(true);
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    if (user.role !== "DONOR") {
+      setAllowed(false);
+      return;
+    }
+
+    setAllowed(true);
+  }, [navigate]);
 
   // Fetch branch payment info
   useEffect(() => {
@@ -66,9 +82,16 @@ const DonatePage = () => {
       .finally(() => setIsPaymentInfoLoading(false));
   }, [dispatch, branchId, navigate]);
 
+  if (allowed === null) {
+    return (
+      <div className="flex items-center justify-center h-screen text-lg font-semibold">
+        Checking permissions...
+      </div>
+    );
+  }
+
   // Form submission handler
   const handleFormSubmit = async (formData) => {
-    const user = JSON.parse(localStorage.getItem("user"));
     if (!user) {
       setToast({ message: "Please login to continue.", type: "error" });
       return;
@@ -163,9 +186,29 @@ const DonatePage = () => {
 
   const { bankName, accountTitle, accountNumber } = branchPaymentInfo || {};
 
+  if (allowed === false) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
+        <h2 className="text-2xl font-bold text-red-600 mb-2">
+          Access Restricted
+        </h2>
+        <p className="text-gray-600">
+          Please login as a <strong>Donor</strong> to access this page.
+        </p>
+        <button
+          onClick={() => navigate(-1)}
+          className="mt-4 bg-orange-600 text-white px-6 py-2 rounded-lg"
+        >
+          Go to previous page
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-50 min-h-screen">
       <Navbar />
+
       {toast && (
         <Toast
           message={toast.message}

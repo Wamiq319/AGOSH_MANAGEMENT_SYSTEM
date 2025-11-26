@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import {
   LandingPage,
@@ -18,7 +17,8 @@ import {
   DonorExploreBranchesPage,
   BranchDetailPage,
   DonatePage,
-  BranchDonationsPage
+  BranchDonationsPage,
+  DonationsManagementPage,
 } from "@/pages";
 
 const AppRouter = () => {
@@ -30,14 +30,14 @@ const AppRouter = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register-donor" element={<DonorRegistrationPage />} />
         <Route path="/branches" element={<DonorExploreBranchesPage />} />
-        <Route path="/branch/:id" element={<BranchDetailPage/>}/>
+        <Route path="/branch/:id" element={<BranchDetailPage />} />
         <Route path="/donate" element={<DonatePage />} />
-
         {/* Admin Routes */}
         <Route path="/admin" element={<HeadAdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="branches" element={<BranchesManagementPage />} />
           <Route path="donors" element={<DonorManagementPage />} />
+          <Route path="donations" element={<DonationsManagementPage />} />
           <Route path="students" element={<StudentsManagementPage />} />
         </Route>
 
@@ -45,7 +45,7 @@ const AppRouter = () => {
         <Route path="/branch-admin" element={<BranchAdminLayout />}>
           <Route index element={<BranchAdminDashboard />} />
           <Route path="students" element={<StudentManagementPage />} />
-          <Route path="donations" element={<BranchDonationsPage/>}/>
+          <Route path="donations" element={<BranchDonationsPage />} />
         </Route>
 
         {/* Donor Routes */}
