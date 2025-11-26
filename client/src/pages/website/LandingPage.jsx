@@ -1,7 +1,6 @@
 import React from "react";
 import Logo from "@/assets/LOGO.png";
-import { Navbar, Footer } from "../../components";
-import { Button } from "@/components";
+import { Navbar, Button } from "../../components";
 
 // ---------------------- COMPONENTS ----------------------
 
@@ -28,25 +27,44 @@ const HeroSection = () => {
           education.
         </p>
 
-        {isLoggedIn ? (
+        <div className="mt-8 flex flex-wrap justify-center gap-4">
+          {!isLoggedIn && (
+            <>
+              <Button
+                rounded
+                color="blue"
+                className="px-6 py-3 text-lg shadow-lg"
+                onClick={() => (window.location.href = "/login")}
+              >
+                Login
+              </Button>
+              <Button
+                rounded
+                color="green"
+                className="px-6 py-3 text-lg shadow-lg"
+                onClick={() => (window.location.href = "/register-donor")}
+              >
+                Register
+              </Button>
+              <Button
+                rounded
+                color="yellow"
+                className="px-6 py-3 text-lg shadow-lg"
+                onClick={() => (window.location.href = "/donate")}
+              >
+                Donate
+              </Button>
+            </>
+          )}
           <Button
             rounded
-            color="blue"
-            className="mt-8 px-8 py-4 text-lg shadow-lg"
+            color="orange"
+            className="px-6 py-3 text-lg shadow-lg"
             onClick={() => (window.location.href = "/branches")}
           >
-            Explore Branches
+            Explore
           </Button>
-        ) : (
-          <Button
-            rounded
-            color="blue"
-            className="mt-8 px-8 py-4 text-lg shadow-lg"
-            onClick={() => (window.location.href = "/register-donor")}
-          >
-            Register As Donor
-          </Button>
-        )}
+        </div>
       </div>
     </section>
   );
@@ -129,7 +147,7 @@ const ProcessSection = () => {
         <h2 className="text-4xl md:text-5xl font-extrabold text-blue-700 mb-12">
           How It Works
         </h2>
-        <div className="grid md:grid-cols-5 gap-8">
+        <div className="grid md:grid-cols-4 gap-8">
           {steps.map((step, idx) => (
             <div key={idx} className="flex flex-col items-center text-center">
               <div className="text-5xl">{step.icon}</div>
@@ -164,8 +182,27 @@ const CTASection = () => (
   </section>
 );
 
-// ---------------------- MAIN PAGE ----------------------
+// FOOTER COMPONENT
+const Footer = () => (
+  <footer className="bg-gray-800 text-white py-8 px-6 mt-12">
+    <div className="max-w-6xl mx-auto text-center">
+      <p>© {new Date().getFullYear()} Agosh. All rights reserved.</p>
+      <div className="flex justify-center mt-4 gap-4">
+        <a href="/about" className="hover:text-orange-400">
+          About
+        </a>
+        <a href="/contact" className="hover:text-orange-400">
+          Contact
+        </a>
+        <a href="/terms" className="hover:text-orange-400">
+          Terms
+        </a>
+      </div>
+    </div>
+  </footer>
+);
 
+// ---------------------- MAIN PAGE ----------------------
 const LandingPage = () => {
   return (
     <div className="w-full overflow-hidden">

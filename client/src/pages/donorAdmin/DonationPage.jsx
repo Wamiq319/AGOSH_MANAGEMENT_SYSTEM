@@ -14,7 +14,8 @@ import {
   ConfirmationModal,
   Toast,
 } from "@/components";
-import { FaTrash, FaEdit, FaEye, FaPlus, FaReceipt } from "react-icons/fa";
+import { FaTrash, FaEdit, FaEye, FaPlus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export const DonationManagementPage = () => {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ export const DonationManagementPage = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState(null);
+  const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
   const resource = user ? `donations/donor/${user._id}` : null;
@@ -37,12 +39,6 @@ export const DonationManagementPage = () => {
     }
     dispatch(fetchResources({ resource: "branches" }));
   }, [dispatch, resource]);
-
-  const handleAddNew = () => {
-    setFormMode("add");
-    setSelectedDonation(null);
-    setIsFormOpen(true);
-  };
 
   const handleEdit = (row) => {
     setFormMode("edit");
@@ -199,7 +195,7 @@ export const DonationManagementPage = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-blue-700">My Donations</h1>
         <Button
-          onClick={handleAddNew}
+          onClick={() => navigate("/branches")}
           variant="filled"
           color="orange"
           className="flex items-center gap-2"
