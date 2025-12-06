@@ -35,3 +35,17 @@ export const updateNeedById = async (id, updateData) => {
     return { status: "SERVER_ERROR", message: "Failed to update need." };
   }
 };
+
+export const deleteNeedById = async (id) => {
+  try {
+    const deletedNeed = await Need.findByIdAndDelete(id);
+    if (!deletedNeed) {
+      return { status: "NOT_FOUND", message: "Need not found." };
+    }
+    return { status: "SUCCESS", data: deletedNeed };
+  } catch (error) {
+    console.error(" Need Service | deleteNeedById:", error);
+    return { status: "SERVER_ERROR", message: "Failed to delete need." };
+  }
+};
+  

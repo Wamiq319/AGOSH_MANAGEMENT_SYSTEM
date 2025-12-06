@@ -7,5 +7,5 @@ router.post("/", needController.createNeed);
 router.get("/", needController.getAllNeeds);
 // router.get("/:id", needController.getNeedById);
 router.put("/:id", needController.updateNeedById);
-// router.delete("/:id", needController.deleteNeedById);
+router.delete("/:id", needController.deleteNeedById);
 export default router;
