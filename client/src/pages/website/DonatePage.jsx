@@ -218,7 +218,7 @@ console.log(branchId);
         />
       )}
       {/* --- HERO SECTION (Consistent Orange Gradient) --- */}
-      <div className="relative bg-gradient-to-r from-orange-600 to-amber-500 pt-16 pb-24 px-6 shadow-lg">
+      <div className="relative overflow-hidden bg-gradient-to-r from-orange-600 to-amber-500 pt-16 pb-24 px-6 shadow-lg">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center relative z-10">
           <div className="text-white text-center md:text-left">
             <h1 className="text-4xl md:text-5xl font-extrabold mb-2 tracking-tight">
