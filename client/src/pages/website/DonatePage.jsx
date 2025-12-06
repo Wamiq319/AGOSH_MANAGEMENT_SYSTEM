@@ -35,6 +35,7 @@ const DonatePage = () => {
 
   const { branchId, branchName, studentId, studentName, donationType } =
     location.state || {};
+console.log(branchId);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState(null);
@@ -60,7 +61,7 @@ const DonatePage = () => {
   useEffect(() => {
     if (!branchId) {
       setToast({ message: "Error: Donation target not set.", type: "error" });
-      setTimeout(() => navigate("/explore-branches"), 1000);
+      setTimeout(() => navigate("/branches"), 1000);
       return;
     }
 

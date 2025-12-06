@@ -50,20 +50,12 @@ const HeroSection = () => {
                 rounded
                 color="yellow"
                 className="px-6 py-3 text-lg shadow-lg"
-                onClick={() => (window.location.href = "/donate")}
+                onClick={() => (window.location.href = "/branches")}
               >
                 Donate
               </Button>
             </>
           )}
-          <Button
-            rounded
-            color="orange"
-            className="px-6 py-3 text-lg shadow-lg"
-            onClick={() => (window.location.href = "/branches")}
-          >
-            Explore
-          </Button>
         </div>
       </div>
     </section>

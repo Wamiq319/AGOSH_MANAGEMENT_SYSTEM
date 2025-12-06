@@ -9,7 +9,6 @@ import {
   FaMapMarkerAlt,
   FaPhone,
   FaUserTie,
-  FaUniversity,
   FaQrcode,
   FaChild,
   FaHandHoldingHeart,
@@ -78,7 +77,7 @@ const BranchDetailPage = () => {
   const branch = data.branchesById;
   const students = data.students;
   const studentsForBranch = students?.filter(
-    (student) => student.branch._id === branchId
+    (student) =>student.branch && student.branch._id === branchId
   );
 
   const [isLoading, setIsLoading] = useState(true);
