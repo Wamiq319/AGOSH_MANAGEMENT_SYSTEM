@@ -1,4 +1,11 @@
-import { LayoutDashboard, Users, DollarSign, Building } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  DollarSign,
+  Building,
+  Icon,
+  ClipboardList,
+} from "lucide-react";
 
 export const SidebarMenus = {
   HEAD_OFFICE_ADMIN: [
@@ -17,7 +24,7 @@ export const SidebarMenus = {
       Icon: Users,
       path: "/admin/donors",
     },
-     {
+    {
       label: "Donations",
       Icon: DollarSign,
       path: "/admin/donations",
@@ -38,12 +45,17 @@ export const SidebarMenus = {
     {
       label: "Students",
       Icon: Users,
-      path: "/branch-admin/students", // you can add later when students page exists
+      path: "/branch-admin/students",
     },
     {
       label: "Donations",
       Icon: DollarSign,
-      path: "/branch-admin/donations", // optional future route
+      path: "/branch-admin/donations",
+    },
+    {
+      label: "Needs Reporting",
+      Icon: ClipboardList,
+      path: "/branch-admin/requests",
     },
   ],
 
@@ -56,7 +68,7 @@ export const SidebarMenus = {
     {
       label: "My Donations",
       Icon: DollarSign,
-      path: "/donor/donations", // optional future route
+      path: "/donor/donations",
     },
   ],
 };

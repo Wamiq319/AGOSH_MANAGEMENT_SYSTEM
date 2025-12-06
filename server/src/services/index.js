@@ -4,3 +4,4 @@ export * from "./branch.services.js";
 export * from "./student.services.js";
 export * from "./dashboard.services.js";
 export * from "./donation.services.js";
+export * from "./need.services.js";

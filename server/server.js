@@ -9,6 +9,7 @@ import {
   studentRoutes,
   dashboardRoutes,
   donationRoutes,
+  needRoutes,
 } from "./src/routes/index.js";
 
 // Load environment variables
@@ -98,6 +99,7 @@ app.use("/api/branches", branchRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/donations", donationRoutes);
+app.use("/api/needs", needRoutes);
 
 // ---------------------
 // Server Start

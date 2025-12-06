@@ -6,4 +6,5 @@ email=admin@gmail.com
 password=123456
 
 
-
+branch-admin alice@example.com
+password password123
