@@ -45,9 +45,12 @@ export const DonationManagementPage = () => {
     setSelectedDonation(row);
     setIsFormOpen(true);
   };
-  const handleDelete = (row) => {
+  const handleDelete = async (row) => {
     setDeleteId(row._id);
     setIsConfirmOpen(true);
+    if (resource) {
+      await dispatch(fetchResources({ resource }));
+    }
   };
 
   const confirmDelete = async () => {
