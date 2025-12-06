@@ -43,27 +43,27 @@ const Dropdown = ({
 
       <div
         className={`flex items-center justify-between px-4 py-3 rounded-lg border text-sm transition-all cursor-pointer ${
-          error ? "border-red-500" : "border-[#185D86]"
-        } ${isOpen ? "ring-1 ring-[#185D86]/50" : ""}`}
+          error ? "border-red-500" : "border-blue-500"
+        } ${isOpen ? "ring-1 ring-blue-500" : ""}`}
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <span className="truncate text-[#12254D]">{selectedLabel}</span>
+        <span className="truncate text-blue-500">{selectedLabel}</span>
         {isOpen ? (
-          <FaChevronUp className="h-4 w-4 text-[#185D86]" />
+          <FaChevronUp className="h-4 w-4 text-blue-500" />
         ) : (
-          <FaChevronDown className="h-4 w-4 text-[#185D86]" />
+          <FaChevronDown className="h-4 w-4 text-blue-500" />
         )}
       </div>
 
       {isOpen && (
-        <div className="absolute z-10 mt-1 w-full rounded-lg bg-white border border-[#185D86]/60 shadow-md max-h-36 overflow-y-auto scrollbar-hide animate-fadeIn">
+        <div className="absolute z-10 mt-1 w-full rounded-lg bg-white border border-blue-500 shadow-md max-h-36 overflow-y-auto scrollbar-hide animate-fadeIn">
           {options.length > 0 ? (
             options.map((option) => (
               <div
                 key={option.value}
                 className={`px-3 py-2 flex justify-between items-center text-sm cursor-pointer transition-all ${
                   selectedValue === option.value
-                    ? "bg-[#185D86] text-white"
+                    ? "bg-blue-500 text-white"
                     : "hover:bg-[#E5F3FB] text-[#12254D]"
                 }`}
                 onClick={() => handleSelect(option.value)}

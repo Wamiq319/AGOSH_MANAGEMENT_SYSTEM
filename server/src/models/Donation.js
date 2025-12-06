@@ -22,6 +22,10 @@ const donationSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    purpose: {
+      type: String,
+      default: "",
+    },
 
     receiptImage: {
       type: String,

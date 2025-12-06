@@ -35,7 +35,6 @@ const DonatePage = () => {
 
   const { branchId, branchName, studentId, studentName, donationType } =
     location.state || {};
-console.log(branchId);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState(null);
@@ -113,6 +112,7 @@ console.log(branchId);
       donor: user._id,
       branch: branchId || formData.branch,
       amount: Number(formData.amount),
+      purpose: formData.purpose || "GENERAL",
       receiptImage: formData.receiptImage,
       notes: formData.notes || "",
       ...(donationType === "SPECIFIC_STUDENT" &&
@@ -144,30 +144,59 @@ console.log(branchId);
   };
 
   // Define Form Fields
-  const getFormFields = () => [
-    {
-      label: "Donated Amount (PKR)",
-      name: "amount",
-      type: "number",
-      required: true,
-      icon: FaDollarSign,
-      placeholder: "Enter the exact amount transferred",
-    },
-    {
-      label: "Notes (Optional)",
-      name: "notes",
-      type: "textarea",
-      rows: 1,
-      required: false,
-      placeholder: "A special request or acknowledgement.",
-    },
-    {
-      label: "Receipt Image",
-      name: "receiptImage",
-      type: "image",
-      required: true,
-    },
-  ];
+  const getFormFields = () => {
+    const baseFields = [
+      {
+        label: "Donated Amount (PKR)",
+        name: "amount",
+        type: "number",
+        required: true,
+        icon: FaDollarSign,
+        placeholder: "Enter the exact amount transferred",
+      },
+      ...(!isSpecific
+        ? [
+            {
+              label: "Donation Purpose",
+              name: "purpose",
+              type: "dropdown",
+              required: false,
+              options: [
+                // Dropdown options
+                { value: "", label: "General Purpose " },
+                { value: "CLOTHING", label: "Students' Clothing/Uniform" },
+                { value: "FOOD", label: "Meal/Food Drive" },
+                { value: "EVENT", label: "Special Event/Activity" },
+                { value: "SUPPLIES", label: "School Supplies/Books" },
+                {
+                  value: "OTHER",
+                  label: "Other Specific Use (Please clarify in Notes)",
+                },
+              ],
+              icon: FaCheckCircle,
+              placeholder: "Select purpose (e.g., Clothing, Food)",
+            },
+          ]
+        : []),
+      // ----------------------------------------
+      {
+        label: "Notes (Optional)",
+        name: "notes",
+        type: "textarea",
+        rows: !isSpecific ? 5 : 1,
+        required: false,
+        placeholder: "A special request or acknowledgement.",
+      },
+      {
+        label: "Receipt Image",
+        name: "receiptImage",
+        type: "image",
+        required: true,
+      },
+    ];
+
+    return baseFields;
+  };
 
   const isSpecific = donationType === "SPECIFIC_STUDENT";
   const donationTargetText = isSpecific
@@ -217,7 +246,7 @@ console.log(branchId);
           onClose={() => setToast(null)}
         />
       )}
-      {/* --- HERO SECTION (Consistent Orange Gradient) --- */}
+      {/* --- HERO SECTION  --- */}
       <div className="relative overflow-hidden bg-gradient-to-r from-orange-600 to-amber-500 pt-16 pb-24 px-6 shadow-lg">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center relative z-10">
           <div className="text-white text-center md:text-left">
@@ -289,7 +318,7 @@ console.log(branchId);
                     </span>
                   </div>
 
-                  {/* Account Number (Highlight) */}
+                  {/* Account Number  */}
                   <div>
                     <span className="text-orange-500 text-sm font-semibold  mb-1 flex items-center gap-1">
                       <FaQrcode /> Account Number (Crucial)
@@ -331,7 +360,7 @@ console.log(branchId);
               <p className="ml-5 text-gray-600">(Branch: {branchName})</p>
             </SectionCard>
 
-            {/* 2. Upload Form Section (Step 2) */}
+            {/* 2. Upload Form Section */}
             <SectionCard>
               <h2 className="text-2xl font-bold text-gray-700 flex items-center mb-6 pb-2 border-b border-gray-300">
                 <span className="bg-indigo-100 text-indigo-600 p-2 rounded-full mr-3 font-extrabold text-lg flex items-center justify-center h-10 w-10">

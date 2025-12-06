@@ -56,6 +56,16 @@ const HeroSection = () => {
               </Button>
             </>
           )}
+          {isLoggedIn && (
+            <Button
+              rounded
+              color="yellow"
+              className="px-6 py-3 text-lg shadow-lg"
+              onClick={() => (window.location.href = "/branches")}
+            >
+              Donate
+            </Button>
+          )}
         </div>
       </div>
     </section>

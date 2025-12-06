@@ -248,6 +248,12 @@ export const DonationManagementPage = () => {
             <p>
               <strong>Notes:</strong> {selectedDonation.notes || "-"}
             </p>
+            <p>
+              <strong>Category:</strong> {selectedDonation.category}
+            </p>
+            <p>
+              <strong>Purpose:</strong> {selectedDonation.purpose || "-"}
+            </p>
             {selectedDonation.receiptImage && (
               <div className="mt-2">
                 <strong>Receipt:</strong>

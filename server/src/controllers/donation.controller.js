@@ -14,6 +14,7 @@ export const createDonation = async (req, res) => {
       branch: req.body.branch,
       amount: req.body.amount,
       student: req.body.student,
+      purpose: req.body.purpose || "",
 
       notes: req.body.notes || "",
     };

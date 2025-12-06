@@ -73,7 +73,7 @@ const ImageInput = ({
           </div>
         ) : (
           <label
-            className={`flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-blue-500 rounded-md cursor-pointer bg-[#F0F8FF] hover:bg-blue-50 transition ${
+            className={`flex flex-col items-center justify-center w-full h-36 border-2 border-dashed border-blue-500 rounded-md cursor-pointer bg-[#F0F8FF] hover:bg-blue-50 transition ${
               disabled ? "opacity-60 cursor-not-allowed bg-gray-100" : ""
             }`}
           >
