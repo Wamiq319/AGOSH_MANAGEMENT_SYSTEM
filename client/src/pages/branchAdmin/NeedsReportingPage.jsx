@@ -245,6 +245,7 @@ export const NeedsReportingPage = () => {
       type: "text",
       required: true,
       icon: FaPaperPlane,
+      placeholder: "e.g., Winter Jackets, Medical Supplies",
     },
     {
       label: "Quantity/Amount Required",
@@ -258,7 +259,7 @@ export const NeedsReportingPage = () => {
       name: "description",
       type: "textarea",
       required: true,
-      placeholder: "Explain kyun zaroorat hai aur yeh kis kaam aayega.",
+      placeholder: "Provide more details about the need/request.",
     },
   ];
 
