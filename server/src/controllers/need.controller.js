@@ -90,7 +90,6 @@ export const getAllNeeds = async (req, res) => {
   }
 };
 
-
 export const updateNeedById = async (req, res) => {
   try {
     const needId = req.params.id;
@@ -204,6 +203,64 @@ export const deleteNeedById = async (req, res) => {
     }
   } catch (error) {
     console.error("❌ Controller Crash | deleteNeedById:", error);
+    return sendResponse(
+      res,
+      { success: false, message: "Internal Server Error" },
+      500
+    );
+  }
+};
+
+export const getNeedByBranchId = async (req, res) => {
+  try {
+    const BranchId = req.params.id;
+
+    if (!BranchId) {
+      return sendResponse(
+        res,
+        { success: false, message: "Need ID is required" },
+        400
+      );
+    }
+
+    const result = await needService.getNeedByBranchId(BranchId);
+
+    switch (result.status) {
+      case "SUCCESS":
+        return sendResponse(
+          res,
+          {
+            success: true,
+            data: result.data,
+            message: "Need fetched successfully",
+          },
+          200
+        );
+
+      case "NOT_FOUND":
+        return sendResponse(
+          res,
+          { success: false, message: "Need not found" },
+          404
+        );
+
+      case "SERVER_ERROR":
+        console.error("❌ Need Controller | getNeedById:", result.message);
+        return sendResponse(
+          res,
+          { success: false, message: result.message },
+          500
+        );
+
+      default:
+        return sendResponse(
+          res,
+          { success: false, message: "Unexpected error occurred" },
+          500
+        );
+    }
+  } catch (error) {
+    console.error("❌ Controller Crash | getNeedById:", error);
     return sendResponse(
       res,
       { success: false, message: "Internal Server Error" },

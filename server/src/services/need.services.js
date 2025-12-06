@@ -48,4 +48,16 @@ export const deleteNeedById = async (id) => {
     return { status: "SERVER_ERROR", message: "Failed to delete need." };
   }
 };
-  
+
+export const getNeedByBranchId = async (BranchId) => {
+  try {
+    const need = await Need.find({ branch: BranchId });
+    if (!need) {
+      return { status: "NOT_FOUND", message: "Need not found." };
+    }
+    return { status: "SUCCESS", data: need };
+  } catch (error) {
+    console.error(" Need Service | getNeedByBranchId:", error);
+    return { status: "SERVER_ERROR", message: "Failed to retrieve need." };
+  }
+};
