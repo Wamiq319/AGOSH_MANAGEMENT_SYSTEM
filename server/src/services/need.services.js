@@ -13,7 +13,7 @@ export const createNeed = async (NeedData) => {
 
 export const getAllNeeds = async () => {
   try {
-    const needs = await Need.find();
+    const needs = await Need.find({}).populate("branch", "name location");
     return { status: "SUCCESS", data: needs };
   } catch (error) {
     console.error(" Need Service | getAllNeeds:", error);
@@ -51,7 +51,10 @@ export const deleteNeedById = async (id) => {
 
 export const getNeedByBranchId = async (BranchId) => {
   try {
-    const need = await Need.find({ branch: BranchId });
+    const need = await Need.find({ branch: BranchId }).papulate(
+      "branch",
+      "name location"
+    );
     if (!need) {
       return { status: "NOT_FOUND", message: "Need not found." };
     }

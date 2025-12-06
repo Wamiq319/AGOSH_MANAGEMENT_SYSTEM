@@ -21,7 +21,7 @@ import {
   FaTimesCircle,
   FaClock,
   FaBuilding,
-  FaBullhorn, // Icon rehne diya, page title ke liye
+  FaBullhorn,
 } from "react-icons/fa";
 
 export const NeedReportsManagementPage = () => {
@@ -35,7 +35,6 @@ export const NeedReportsManagementPage = () => {
 
   const allNeeds = data.needs || [];
 
-  // Data fetch: Saari needs reports
   useEffect(() => {
     dispatch(fetchResources({ resource: "needs" }));
   }, [dispatch]);
@@ -180,12 +179,8 @@ export const NeedReportsManagementPage = () => {
       );
     }
 
-    // Publish Toggle logic removed
-
     return buttons;
   };
-
-  // --- Render ---
 
   return (
     <div className="p-6">
@@ -198,7 +193,7 @@ export const NeedReportsManagementPage = () => {
       )}
 
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-purple-700 flex items-center gap-2">
+        <h1 className="text-3xl font-bold text-blue-700 flex items-center gap-2">
           <FaBullhorn /> Need Reports Management (Head Office)
         </h1>
       </div>
