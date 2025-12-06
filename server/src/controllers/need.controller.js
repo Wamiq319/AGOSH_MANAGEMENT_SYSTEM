@@ -89,3 +89,71 @@ export const getAllNeeds = async (req, res) => {
     );
   }
 };
+
+
+export const updateNeedById = async (req, res) => {
+  try {
+    const needId = req.params.id;
+    const updateData = req.body;
+
+    if (!needId) {
+      return sendResponse(
+        res,
+        { success: false, message: "Need ID is required" },
+        400
+      );
+    }
+
+    if (!updateData || Object.keys(updateData).length === 0) {
+      return sendResponse(
+        res,
+        { success: false, message: "Update data is required" },
+        400
+      );
+    }
+
+    const result = await needService.updateNeedById(needId, updateData);
+
+    switch (result.status) {
+      case "SUCCESS":
+        return sendResponse(
+          res,
+          {
+            success: true,
+            data: result.data,
+            message: "Need updated successfully",
+          },
+          200
+        );
+
+      case "NOT_FOUND":
+        return sendResponse(
+          res,
+          { success: false, message: "Need not found" },
+          404
+        );
+
+      case "SERVER_ERROR":
+        console.error("❌ Need Controller | updateNeedById:", result.message);
+        return sendResponse(
+          res,
+          { success: false, message: result.message },
+          500
+        );
+
+      default:
+        return sendResponse(
+          res,
+          { success: false, message: "Unexpected error occurred" },
+          500
+        );
+    }
+  } catch (error) {
+    console.error("❌ Controller Crash | updateNeedById:", error);
+    return sendResponse(
+      res,
+      { success: false, message: "Internal Server Error" },
+      500
+    );
+  }
+};

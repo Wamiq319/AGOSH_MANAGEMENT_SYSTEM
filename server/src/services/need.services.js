@@ -20,3 +20,18 @@ export const getAllNeeds = async () => {
     return { status: "SERVER_ERROR", message: "Failed to retrieve needs." };
   }
 };
+
+export const updateNeedById = async (id, updateData) => {
+  try {
+    const updatedNeed = await Need.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
+    if (!updatedNeed) {
+      return { status: "NOT_FOUND", message: "Need not found." };
+    }
+    return { status: "SUCCESS", data: updatedNeed };
+  } catch (error) {
+    console.error(" Need Service | updateNeedById:", error);
+    return { status: "SERVER_ERROR", message: "Failed to update need." };
+  }
+};

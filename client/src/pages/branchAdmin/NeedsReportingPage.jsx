@@ -41,15 +41,15 @@ export const NeedsReportingPage = () => {
 
   const user = JSON.parse(localStorage.getItem("user"));
   const branchId = user?.branch?._id || user?.branch;
-  
+
   const needsForBranch = (data.needs || []).filter(
-    (need) => need.branch?._id === branchId || need.branch === branchId 
+    (need) => need.branch?._id === branchId || need.branch === branchId
   );
 
   // Initial data fetch
   useEffect(() => {
     if (branchId) {
-      dispatch(fetchResources({ resource: "needs" })); 
+      dispatch(fetchResources({ resource: "needs" }));
     }
   }, [dispatch, branchId]);
 
@@ -96,10 +96,16 @@ export const NeedsReportingPage = () => {
     );
 
     if (result.meta.requestStatus === "fulfilled") {
-      setToast({ message: "Need Report deleted successfully.", type: "success" });
+      setToast({
+        message: "Need Report deleted successfully.",
+        type: "success",
+      });
       dispatch(fetchResources({ resource: "needs" }));
     } else {
-      setToast({ message: result.payload || "Failed to delete report.", type: "error" });
+      setToast({
+        message: result.payload || "Failed to delete report.",
+        type: "error",
+      });
     }
 
     setDeleteId(null);
@@ -108,13 +114,13 @@ export const NeedsReportingPage = () => {
 
   const handleFormSubmit = async (formData) => {
     setIsSubmitting(true);
-    
+
     const body = {
       title: formData.title,
       description: formData.description,
       quantityOrAmount: formData.quantityOrAmount,
-      branch: branchId, 
-      status: formMode === "add" ? "PENDING" : selectedNeed.status, 
+      branch: branchId,
+      status: formMode === "add" ? "PENDING" : selectedNeed.status,
     };
 
     let result;
@@ -153,26 +159,38 @@ export const NeedsReportingPage = () => {
   const getStatusDisplay = (status) => {
     switch (status) {
       case "APPROVED":
-        return <span className="text-green-600 font-medium">Approved <FaCheckCircle className="inline ml-1" /></span>;
+        return (
+          <span className="text-green-600 font-medium">
+            Approved <FaCheckCircle className="inline ml-1" />
+          </span>
+        );
       case "REJECTED":
-        return <span className="text-red-500 font-medium">Rejected <FaTimesCircle className="inline ml-1" /></span>;
+        return (
+          <span className="text-red-500 font-medium">
+            Rejected <FaTimesCircle className="inline ml-1" />
+          </span>
+        );
       case "PENDING":
       default:
-        return <span className="text-yellow-600 font-medium">Pending <FaClock className="inline ml-1" /></span>;
+        return (
+          <span className="text-yellow-600 font-medium">
+            Pending <FaClock className="inline ml-1" />
+          </span>
+        );
     }
   };
 
   const tableHeader = [
     { label: "Item/Need", key: "title" },
     { label: "Quantity", key: "quantityOrAmount" },
-    { 
-        label: "Date", 
-        key: "createdAt", 
-        render: (row) => new Date(row.createdAt).toLocaleDateString() 
+    {
+      label: "Date",
+      key: "createdAt",
+      render: (row) => new Date(row.createdAt).toLocaleDateString(),
     },
-    { 
-      label: "Status", 
-      key: "status", 
+    {
+      label: "Status",
+      key: "status",
       render: (row) => getStatusDisplay(row.status),
     },
   ];
@@ -186,14 +204,34 @@ export const NeedsReportingPage = () => {
     },
     {
       icon: <FaEdit />,
-      className: row.status === "PENDING" ? "bg-orange-500 hover:bg-orange-600 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed",
-      onClick: row.status === "PENDING" ? handleEdit : () => setToast({ message: "Only pending reports can be edited.", type: "warning" }),
+      className:
+        row.status === "PENDING"
+          ? "bg-orange-500 hover:bg-orange-600 text-white"
+          : "bg-gray-400 text-gray-700 cursor-not-allowed",
+      onClick:
+        row.status === "PENDING"
+          ? handleEdit
+          : () =>
+              setToast({
+                message: "Only pending reports can be edited.",
+                type: "warning",
+              }),
       title: row.status === "PENDING" ? "Edit" : "Cannot Edit",
     },
     {
       icon: <FaTrash />,
-      className: row.status === "PENDING" ? "bg-red-600 hover:bg-red-700 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed",
-      onClick: row.status === "PENDING" ? handleDelete : () => setToast({ message: "Only pending reports can be deleted.", type: "warning" }),
+      className:
+        row.status === "PENDING"
+          ? "bg-red-600 hover:bg-red-700 text-white"
+          : "bg-gray-400 text-gray-700 cursor-not-allowed",
+      onClick:
+        row.status === "PENDING"
+          ? handleDelete
+          : () =>
+              setToast({
+                message: "Only pending reports can be deleted.",
+                type: "warning",
+              }),
       title: row.status === "PENDING" ? "Delete" : "Cannot Delete",
     },
   ];
@@ -201,20 +239,26 @@ export const NeedsReportingPage = () => {
   // --- Form Configuration ---
 
   const getFormFields = () => [
-    { label: "Need/Item Title", name: "title", type: "text", required: true, icon: FaPaperPlane },
-    { 
-        label: "Quantity/Amount Required", 
-        name: "quantityOrAmount", 
-        type: "text", 
-        required: true,
-        placeholder: "e.g., 150 pairs, 100 kg Rice, 50,000 PKR",
+    {
+      label: "Need/Item Title",
+      name: "title",
+      type: "text",
+      required: true,
+      icon: FaPaperPlane,
     },
-    { 
-        label: "Detailed Description", 
-        name: "description", 
-        type: "textarea", 
-        required: true,
-        placeholder: "Explain kyun zaroorat hai aur yeh kis kaam aayega.",
+    {
+      label: "Quantity/Amount Required",
+      name: "quantityOrAmount",
+      type: "text",
+      required: true,
+      placeholder: "e.g., 150 pairs, 100 kg Rice, 50,000 PKR",
+    },
+    {
+      label: "Detailed Description",
+      name: "description",
+      type: "textarea",
+      required: true,
+      placeholder: "Explain kyun zaroorat hai aur yeh kis kaam aayega.",
     },
   ];
 
@@ -266,8 +310,8 @@ export const NeedsReportingPage = () => {
       ) : needsForBranch?.length > 0 ? (
         <DataTable
           heading="My Submitted Needs"
-          tableHeader={tableHeader} 
-          tableData={needsForBranch} 
+          tableHeader={tableHeader}
+          tableData={needsForBranch}
           dynamicButtons={getButtons}
         />
       ) : (
@@ -288,11 +332,13 @@ export const NeedsReportingPage = () => {
       >
         {selectedNeed ? (
           <div className="space-y-4">
-            <h3 className="text-xl font-bold text-blue-700">{selectedNeed.title}</h3>
-            
+            <h3 className="text-xl font-bold text-blue-700">
+              {selectedNeed.title}
+            </h3>
+
             <p>
               {/* Status display */}
-              <strong>Status:</strong> {getStatusDisplay(selectedNeed.status)} 
+              <strong>Status:</strong> {getStatusDisplay(selectedNeed.status)}
             </p>
             <p>
               <strong>Quantity/Amount:</strong> {selectedNeed.quantityOrAmount}
@@ -314,7 +360,9 @@ export const NeedsReportingPage = () => {
       <Modal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        headerTitle={formMode === "add" ? "Submit New Need Report" : "Edit Need Report"}
+        headerTitle={
+          formMode === "add" ? "Submit New Need Report" : "Edit Need Report"
+        }
         size="md"
       >
         <FormModal

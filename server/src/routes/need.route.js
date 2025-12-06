@@ -6,6 +6,6 @@ const router = express.Router();
 router.post("/", needController.createNeed);
 router.get("/", needController.getAllNeeds);
 // router.get("/:id", needController.getNeedById);
-// router.put("/:id", needController.updateNeedById);
+router.put("/:id", needController.updateNeedById);
 // router.delete("/:id", needController.deleteNeedById);
 export default router;
