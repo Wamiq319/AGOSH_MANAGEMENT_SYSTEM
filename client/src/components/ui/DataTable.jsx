@@ -48,9 +48,19 @@ const DataTable = ({
                     const getValue = (obj, path) =>
                       path.split(".").reduce((acc, key) => acc?.[key], obj);
 
+                    if (col.render) {
+                      return (
+                        <td
+                          key={i}
+                          className="px-4 py-3 border border-gray-200 whitespace-nowrap"
+                        >
+                          {col.render(row)}
+                        </td>
+                      );
+                    }
+
                     const value = getValue(row, col.key);
 
-                    // Status indicator using blue/orange
                     if (col.key === "status") {
                       const isActive = value === "active" || value === true;
                       return (
@@ -71,7 +81,7 @@ const DataTable = ({
                       );
                     }
 
-                    // Date formatting
+                    // 3. Date formatting
                     if (
                       typeof value === "string" &&
                       /^\d{4}-\d{2}-\d{2}T/.test(value)
@@ -86,6 +96,7 @@ const DataTable = ({
                       );
                     }
 
+                    // 4. Default Value
                     return (
                       <td
                         key={i}

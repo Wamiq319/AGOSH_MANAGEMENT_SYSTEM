@@ -34,6 +34,11 @@ export const SidebarMenus = {
       Icon: Users,
       path: "/admin/students",
     },
+    {
+      label: "Need Reports Management",
+      Icon: ClipboardList,
+      path: "/admin/need-reports",
+    },
   ],
 
   BRANCH_ADMIN: [
