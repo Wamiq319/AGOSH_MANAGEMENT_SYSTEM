@@ -14,7 +14,7 @@ import {
   ConfirmationModal,
   Toast,
 } from "@/components";
-import { FaTrash, FaEdit, FaEye, FaPlus } from "react-icons/fa";
+import { FaTrash, FaEdit, FaEye, FaPlus, FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 export const DonationManagementPage = () => {
@@ -45,7 +45,6 @@ export const DonationManagementPage = () => {
     setSelectedDonation(row);
     setIsFormOpen(true);
   };
-
   const handleDelete = (row) => {
     setDeleteId(row._id);
     setIsConfirmOpen(true);
@@ -79,13 +78,17 @@ export const DonationManagementPage = () => {
     setIsSubmitting(true);
     try {
       let result;
+
       const body = {
         branch: formData.branch,
         amount: formData.amount,
-        receiptImage: formData.receiptImage, // file handled in slice
+
+        receiptImage: formData.receiptImage,
         notes: formData.notes || "",
-        donor: user._id, // Add donor id to the body
+        donor: user._id,
+        purpose: formData.purpose || "",
       };
+
       console.log(body);
 
       if (formMode === "add") {
@@ -113,6 +116,7 @@ export const DonationManagementPage = () => {
           dispatch(fetchResources({ resource }));
         }
         setIsFormOpen(false);
+        setSelectedDonation(null);
       } else {
         setToast({
           message: result.payload || "An error occurred.",
@@ -167,8 +171,33 @@ export const DonationManagementPage = () => {
       required: true,
     },
     { label: "Amount", name: "amount", type: "number", required: true },
-    { label: "Receipt", name: "receiptImage", type: "image", required: true },
+    {
+      label: "Receipt",
+      name: "receiptImage",
+      type: "image",
+      required: formMode === "add", // Edit ke time required nahi hona chahiye
+    },
     { label: "Notes", name: "notes", type: "textarea", required: false },
+    {
+      label: "Donation Purpose",
+      name: "purpose",
+      type: "dropdown",
+      required: false,
+      options: [
+        // Dropdown options
+        { value: "", label: "General Purpose " },
+        { value: "CLOTHING", label: "Students' Clothing/Uniform" },
+        { value: "FOOD", label: "Meal/Food Drive" },
+        { value: "EVENT", label: "Special Event/Activity" },
+        { value: "SUPPLIES", label: "School Supplies/Books" },
+        {
+          value: "OTHER",
+          label: "Other Specific Use (Please clarify in Notes)",
+        },
+      ],
+      icon: FaCheckCircle,
+      placeholder: "Select purpose (e.g., Clothing, Food)",
+    },
   ];
 
   const getInitialData = () => {
@@ -177,6 +206,8 @@ export const DonationManagementPage = () => {
         branch: selectedDonation.branch?._id,
         amount: selectedDonation.amount,
         notes: selectedDonation.notes,
+        purpose: selectedDonation.purpose || "",
+        receiptImage: selectedDonation.receiptImage || null,
       };
     }
     return {};
